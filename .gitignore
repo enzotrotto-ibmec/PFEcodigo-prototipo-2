@@ -1,0 +1,12 @@
+# Dependências e build
+node_modules/
+dist/
+
+# Sistema operacional / editor / ferramentas
+Thumbs.db
+.DS_Store
+desktop.ini
+.vscode/
+.idea/
+.claude/
+*.log

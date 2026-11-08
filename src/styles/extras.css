@@ -1,0 +1,233 @@
+/* Extras compartilhados (PKZ e One To One): pular para o conteúdo, atalhos flutuantes, FAQ e ações da localização. */
+
+/* ---------- Pular para o conteúdo ---------- */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1100;
+  padding: 0.75rem 1.25rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  background: var(--accent-strong, #014c6f);
+  color: var(--on-accent, #fff);
+  border: 2px solid var(--on-accent, #fff);
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid var(--focus, #fff);
+  outline-offset: 2px;
+}
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* ---------- Ações da localização ---------- */
+.location-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: -0.5rem;
+}
+
+/* ---------- Atalhos flutuantes ---------- */
+
+/* Celular: só o botão de voltar ao topo (o WhatsApp fica na barra fixa de baixo) */
+.floating-actions {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.625rem;
+  pointer-events: none;
+}
+.floating-actions > * {
+  pointer-events: auto;
+}
+.floating-actions .back-to-top {
+  position: static;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.wa-fab {
+  display: none;
+}
+
+/* Desktop (a partir de 1101px): botões encostados na borda direita, com o WhatsApp */
+@media (min-width: 68.8125em) {
+  .floating-actions {
+    right: 0;
+    bottom: 1.5rem;
+  }
+  .floating-actions .back-to-top,
+  .wa-fab {
+    width: min(2.75rem, calc(4vw - 1px));
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50% 0 0 50%;
+  }
+  .floating-actions .back-to-top:focus-visible,
+  .wa-fab:focus-visible {
+    outline: 3px solid var(--on-accent, #fff);
+    outline-offset: -5px;
+  }
+  .wa-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-strong, #014c6f);
+    color: var(--on-accent, #fff);
+    border: 2px solid var(--on-accent, #fff);
+    border-right: 0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+  .wa-fab:hover {
+    transform: translateX(-2px);
+  }
+  .wa-fab svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+  }
+}
+[data-brand="pkz"] .wa-fab {
+  border-color: #93c5fd;
+}
+
+/* ---------- FAQ ---------- */
+
+/* Celular: perguntas em coluna */
+section.faq {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+.faq-logo {
+  display: none; /* decorativo: só aparece no desktop, onde sobra espaço embaixo do título */
+}
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+.faq-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  padding: 0.75rem 1.125rem;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary::marker {
+  content: "";
+}
+.faq-item summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--accent-ink);
+  border-bottom: 2px solid var(--accent-ink);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.faq-item[open] summary::after {
+  transform: rotate(-135deg);
+}
+.faq-item summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.faq-item p {
+  padding: 0 1.125rem 1rem;
+  color: var(--text-muted);
+  max-width: 68ch;
+}
+.faq-item p a {
+  color: inherit;
+  text-decoration: underline;
+  padding-block: 0.15em;
+}
+
+/* Desktop (a partir de 1101px): título à esquerda, perguntas à direita */
+@media (min-width: 68.8125em) {
+  section.faq {
+    width: var(--wrap);
+    max-width: none;
+    padding-inline: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    /* sem o 1fr, a altura extra das perguntas abertas se dividia entre as linhas e empurrava o logo para baixo */
+    grid-template-rows: auto 1fr;
+    column-gap: var(--gap-col);
+    align-items: start;
+    text-align: left;
+  }
+  section.faq .faq-list {
+    margin-top: 0;
+    grid-column: 2;
+    grid-row: 1 / span 2; /* as perguntas ocupam as duas linhas; título e logo empilham à esquerda */
+  }
+  .faq-logo {
+    display: block;
+    grid-column: 1;
+    grid-row: 2;
+    width: min(100%, 13rem);
+    height: auto;
+    margin-top: 2rem;
+  }
+}
+
+/* ---------- Política de Privacidade no rodapé ---------- */
+.footer-legal {
+  color: var(--text-muted);
+  text-decoration: underline;
+  font-size: var(--fs-sm);
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-left: 0.75rem;
+}
+
+/* ---------- Link do consentimento e dica de campo (agendamento) ---------- */
+.text-link {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  padding-block: 0.15em;
+}
+.modal-hint {
+  margin: -0.625rem 0 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+iframe:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+iframe {
+  scroll-margin-block: 5rem;
+}

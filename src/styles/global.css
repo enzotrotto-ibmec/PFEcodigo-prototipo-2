@@ -1,0 +1,51 @@
+/*
+  Regras globais do app React (as demais folhas de estilo são as mesmas do vanilla).
+
+  #root e o "invólucro" de cada página (.pagina) usam display: contents: eles existem no
+  HTML, mas não geram caixa. Assim o <header>, o <main> e o <footer> se comportam como se
+  fossem filhos diretos do <body>, igual no vanilla, e o CSS antigo funciona sem mudanças.
+*/
+#root,
+.pagina {
+  display: contents;
+}
+
+/*
+  "Contato" do menu virou <button> (abre uma janela, não troca de página).
+  :where() tem especificidade zero: só tira o visual padrão de botão do navegador,
+  e as regras de .nav-link e .nav-link-highlight do base.css continuam valendo.
+*/
+:where(button.nav-link) {
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+/*
+  Botão "voltar ao topo": no vanilla um listener de scroll punha a classe .show depois de 300px.
+  Sem useEffect (próxima aula), o CSS faz o mesmo nos navegadores que suportam
+  animation-timeline: o botão vai aparecendo nos primeiros 300px de rolagem.
+  Nos outros navegadores ele fica sempre visível.
+*/
+@supports (animation-timeline: scroll()) {
+  .back-to-top.show {
+    animation: mostrar-voltar-ao-topo linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 300px;
+  }
+  @keyframes mostrar-voltar-ao-topo {
+    0%,
+    60% {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(var(--fab-offset, 1rem));
+    }
+    100% {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+}

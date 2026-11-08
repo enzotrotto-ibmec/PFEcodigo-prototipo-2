@@ -1,0 +1,1271 @@
+/*
+  Base compartilhada PKZ Lab + Studio One To One (estrutura, sem cor/fonte de marca).
+  Ordem de carga:  base.css  ->  <marca>.css (pkz.css ou one-to-one.css)  ->  cta.css (só nas páginas com CTA)
+
+  Contrato: cada CSS de marca define, em :root, os tokens abaixo (o base só usa var(--token)).
+  Tokens de layout/movimento iguais nas duas marcas ficam aqui em :root e a marca só sobrescreve se precisar.
+
+  Marca (obrigatórios)
+    Cor         --bg-base --bg-surface --bg-header --bg-nav-panel --bg-modal --bg-input
+                --slot-bg --accent --accent-strong --accent-ink --on-accent
+                --text-primary --text-muted --text-subtle --text-lead --text-footnote
+                --border --border-strong --border-slot --border-input --danger --focus
+    Realce      --pill-bg --pill-border --pill-fg --pill-hover-bg --pill-hover-fg
+                --icon-bg --social-icon-bg --social-fg
+                --hover-bg --hover-border --hover-fg --press-bg --press-fg --hover-tint
+    Botão       --btn-padding --btn-border --btn-hover-bg --btn-hover-fg --radius-btn --radius-btn-modal
+    Tipografia  --font-display --font-body --heading-weight --heading-tracking
+                --nav-weight --nav-size --nav-hover --nav-hover-decoration --nav-transition
+    Sombra      --shadow-hero --shadow-nav --fab-shadow --fab-offset
+    Overlay     --overlay (fundo escuro atrás do modal <dialog>)
+*/
+
+/* MOBILE FIRST: o CSS fora de @media é o layout de celular; cada @media (min-width) só acrescenta o que muda em telas maiores.
+   Breakpoints em em (fonte padrão de 16px): 40.0625em = 641px, 48.0625em = 769px, 53.8125em = 861px, 68.8125em = 1101px
+   (o +0,0625em = 1px evita sobreposição com a faixa anterior). Em em, acompanham a preferência de tamanho de fonte
+   do navegador, então com fonte 200% o layout móvel entra sozinho. */
+
+/* ============================================================
+   Tokens neutros de layout/movimento (iguais nas duas marcas)
+   ============================================================ */
+:root {
+  /* altura do header sticky: compensa as âncoras (scroll-padding-top); 5.25rem a partir de 769px */
+  --header-h: 4rem;
+
+  /* Escala tipográfica (rem: acompanha o html font-size fluido abaixo).
+     Piso: nenhum texto visível < 14px (--fs-xs). Texto corrido >= --fs-base. */
+  --fs-xs: 0.875rem; /* etiquetas em caixa-alta, selos (14px) */
+  --fs-sm: 0.9375rem; /* rótulos de formulário, rodapé legal, notas (15px) */
+  --fs-base: 1rem; /* texto corrido e de apoio (16px) */
+  --fs-lg: 1.125rem; /* parágrafo de abertura, menu mobile */
+  --fs-xl: 1.3rem; /* títulos de card */
+  --fs-h2: clamp(1.8rem, 3.5vw, 2.3rem);
+  --fs-hero: clamp(2.4rem, 8vw, 5.2rem);
+
+  /* largura do container (navbar, hero, seções, rodapé): 67,5rem até 1100px; >= 1101px ver bloco "Desktop largo" */
+  --wrap: 67.5rem;
+  --gap-col: 3rem;
+}
+/* Base fluida: 16px até 1100px, crescendo linear até 28px em 2560px (tela grande = zoom proporcional;
+   larguras de layout e espaçamentos estão em rem e acompanham). Em rem para respeitar a
+   preferência de fonte do usuário. Manter idêntica em legal.css. */
+html {
+  font-size: clamp(1rem, 0.435rem + 0.8222vw, 1.75rem);
+}
+@media (min-width: 48.0625em) {
+  :root {
+    --header-h: 5.25rem;
+  }
+}
+
+/* ============================================================
+   Reset e documento
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  width: 100%;
+  position: relative;
+  overflow-wrap: anywhere; /* fonte grande/zoom 400%: palavra longa quebra em vez de vazar do card */
+}
+
+section {
+  padding: 3.75rem 1.125rem;
+  max-width: 62.5rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: 1rem;
+  overflow-wrap: anywhere; /* espaçamento de texto aumentado (WCAG 1.4.12) não gera rolagem horizontal */
+  font-family: var(--font-display);
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--heading-tracking);
+}
+
+/* ============================================================
+   Header, navegação e menu mobile
+   ============================================================ */
+.site-header {
+  background-color: var(--bg-header);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.nav-left {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+.nav-center {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-right {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Logotipo do topo: o SVG oficial da marca (assets/img/logos), sempre pela altura */
+.brand-logo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem; /* alvo de toque >= 44px */
+  min-height: 2.75rem;
+}
+
+.brand-logo {
+  display: block;
+  height: 2.25rem;
+  width: auto;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.brand-logo-link:hover .brand-logo {
+  transform: scale(1.04);
+}
+
+/* Celular: o menu fica escondido e aparece como um painel logo abaixo do cabeçalho.
+   O JavaScript adiciona e remove a classe "nav-open" para abrir e fechar.
+   A partir de 769px ele vira a linha de links do cabeçalho (ver "Responsivo" mais abaixo). */
+.nav-links {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.5rem 2rem;
+  list-style: none;
+  background-color: var(--bg-nav-panel);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0 0 16px 16px;
+  box-shadow: var(--shadow-nav);
+}
+.nav-links.nav-open {
+  display: flex;
+  animation: menu-in 0.25s ease;
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+.nav-link,
+.back-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: var(--nav-weight);
+  font-size: var(--nav-size);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  transition: var(--nav-transition);
+  min-height: 2.75rem;
+}
+/* Celular: o link ocupa a linha inteira do painel */
+.nav-link {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  font-size: var(--fs-lg);
+  border-radius: 8px;
+}
+/* Celular: só a seta (o texto "Portal" aparece a partir de 769px) */
+.back-link {
+  padding: 0.5rem;
+  margin-left: -0.5rem;
+  min-width: 2.75rem;
+  justify-content: center;
+}
+.back-text {
+  display: none;
+}
+.nav-link:hover,
+.back-link:hover {
+  color: var(--nav-hover);
+  text-decoration: var(--nav-hover-decoration);
+}
+/* Seção que está no meio da tela (o main.js marca com aria-current).
+   Fica depois do :hover para o destaque não sumir com o mouse em cima. */
+.nav-link[aria-current="location"] {
+  color: var(--accent-ink);
+  text-decoration: underline 2px var(--accent-ink);
+  text-underline-offset: 0.35em;
+  animation: nav-atual 0.3s ease; /* o "reduzir movimento" no fim do arquivo desliga */
+}
+@keyframes nav-atual {
+  from {
+    text-decoration-color: transparent;
+    text-underline-offset: 0.75em; /* o sublinhado sobe até o texto enquanto aparece */
+  }
+}
+
+.cross-brand-nav-link {
+  color: var(--text-subtle);
+  display: none; /* aparece a partir de 641px */
+  align-items: center;
+  min-height: 2.75rem;
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+.cross-brand-nav-link:hover {
+  color: var(--accent-ink);
+}
+
+.nav-link-highlight {
+  color: var(--pill-fg);
+  background: var(--pill-bg);
+  border: var(--pill-border);
+}
+.nav-link-highlight:hover {
+  color: var(--pill-hover-fg);
+  background: var(--pill-hover-bg);
+}
+
+.menu-toggle {
+  display: flex;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3125rem;
+  z-index: 210;
+  transition: background-color 0.2s ease;
+}
+.menu-toggle:hover {
+  background-color: var(--hover-tint);
+}
+.hamburger-bar {
+  display: block;
+  width: 1.375rem;
+  height: 2px;
+  background-color: var(--text-primary);
+  border-radius: 2px;
+  transition:
+    transform 0.3s ease,
+    opacity 0.2s ease;
+}
+.menu-toggle.active .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.menu-toggle.active .hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle.active .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================================
+   Hero (o texto do hero é da marca)
+   ============================================================ */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: stretch;
+  min-height: 0;
+  padding: 1.875rem 1.125rem 0.625rem;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  text-align: left;
+}
+/* Páginas de aula: hero sem imagem, coluna única */
+#aula-hero {
+  grid-template-columns: 1fr;
+  min-height: 0;
+}
+.hero-image {
+  align-self: center;
+  aspect-ratio: 16 / 10;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-hero);
+  border: 1px solid var(--border);
+}
+.hero-image img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================================
+   Botões
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-padding);
+  border-radius: var(--radius-btn);
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  min-height: 2.75rem;
+}
+.btn-primary {
+  background-color: var(--accent-strong);
+  border: var(--btn-border);
+  color: var(--on-accent);
+}
+.btn-primary:hover {
+  background-color: var(--btn-hover-bg);
+  color: var(--btn-hover-fg);
+}
+
+/* ============================================================
+   Sobre, tags, cards e ícones
+   ============================================================ */
+.about-section {
+  max-width: var(--wrap);
+  padding: 2.5rem 1.5rem 5.3125rem;
+  margin: 0 auto;
+}
+.about-container {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  text-align: left;
+}
+.about-content-col {
+  max-width: 45rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.section-tag {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pill-fg);
+  background: var(--pill-bg);
+  border: var(--pill-border);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+  align-self: flex-start;
+}
+.about-content-col h2 {
+  font-size: var(--fs-h2);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+.about-lead {
+  font-size: var(--fs-lg);
+  color: var(--text-lead);
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+.about-content-col p {
+  color: var(--text-muted);
+  font-size: var(--fs-base);
+  margin-bottom: 1.5rem;
+}
+.about-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.highlight-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0.875rem 1.125rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.highlight-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: 8px;
+  background-color: var(--icon-bg);
+  color: var(--accent-ink);
+  flex-shrink: 0;
+}
+.highlight-item strong {
+  display: block;
+  font-size: var(--fs-base);
+  margin-bottom: 0.1875rem;
+}
+.highlight-item p {
+  margin: 0;
+  font-size: var(--fs-base);
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   Localização
+   ============================================================ */
+.location-section {
+  max-width: 50rem;
+  margin: 0 auto;
+}
+.location-address {
+  margin-bottom: 0.75rem;
+}
+.location-address-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.meta-icon {
+  flex-shrink: 0;
+  color: var(--accent-ink);
+}
+.location-city {
+  display: block;
+  color: var(--text-muted);
+}
+/* .map-wrapper (raio/borda/sombra) é da marca */
+
+/* Prévia do mapa: botão que ocupa o lugar do iframe até a pessoa pedir o mapa (js/main.js) */
+.map-facade {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 400px; /* mesma altura do iframe: a página não pula quando o mapa entra */
+  padding: 1.5rem;
+  border: 0;
+  /* Textura de mapa em CSS (ruas em grade + uma avenida diagonal), na cor de destaque da marca.
+     O centro fica liso para o texto. Sem color-mix() a textura some e sobra o fundo liso. */
+  --map-street: color-mix(in srgb, var(--accent-ink) 14%, transparent);
+  --map-avenue: color-mix(in srgb, var(--accent-ink) 10%, transparent);
+  --map-texture:
+    radial-gradient(ellipse at center, var(--bg-surface) 0 22%, transparent 55%),
+    linear-gradient(118deg, transparent 49%, var(--map-avenue) 49% 51.5%, transparent 51.5%),
+    repeating-linear-gradient(0deg, var(--map-street) 0 1px, transparent 1px 3.5rem),
+    repeating-linear-gradient(90deg, var(--map-street) 0 1px, transparent 1px 4.5rem);
+  background-color: var(--bg-surface);
+  background-image: var(--map-texture);
+  color: var(--accent-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.map-facade svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Hover: um véu na cor da marca por cima da textura e o pin sobe um pouco, deixando claro que é clicável */
+.map-facade:hover {
+  background-image: linear-gradient(var(--hover-tint), var(--hover-tint)), var(--map-texture);
+}
+.map-facade:hover svg {
+  transform: translateY(-3px);
+}
+.map-facade-label {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.map-facade-hint {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.map-facade:hover .map-facade-label {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.map-facade:focus-visible {
+  outline-offset: -6px; /* o .map-wrapper tem overflow: hidden e cortaria o anel de foco por fora */
+}
+.map-wrapper iframe {
+  display: block; /* tira o espaço de linha embaixo do iframe inline */
+  border: 0;
+}
+/* Depois do clique o foco fica na caixa do mapa: anel visível para quem usa teclado.
+   Seletor mais forte que o [tabindex="-1"]:focus { outline: none } de extras.css, que carrega depois. */
+/* Alto contraste do Windows: o fundo vira a cor do sistema, mas o SVG do logo não é recolorido
+   (um logo branco sumiria num tema claro). O fundo da própria marca fica atrás do logo. */
+@media (forced-colors: active) {
+  .brand-logo,
+  .footer-logo,
+  .faq-logo {
+    forced-color-adjust: none;
+    background-color: var(--bg-base);
+    padding: 0.25rem;
+    border-radius: 4px;
+  }
+}
+.location-section .map-wrapper:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px; /* por dentro: a caixa tem overflow: hidden */
+}
+
+/* Seções que aparecem ao rolar: js/main.js só põe .reveal se houver IntersectionObserver
+   e "reduzir movimento" estiver desligado, então sem JS o conteúdo nunca fica escondido */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  /* ease-out exponencial: a seção chega rápido e assenta devagar */
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media print {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .map-facade {
+    display: none; /* "Ver mapa" não faz sentido no papel; o endereço e o "Como chegar" continuam */
+  }
+}
+
+/* ============================================================
+   Modal <dialog> (showModal): ESC, foco preso e ::backdrop são do navegador
+   Marcação:  <dialog class="modal-dialog" aria-labelledby="..."><div class="modal-box">...</div></dialog>
+   ============================================================ */
+.modal-dialog {
+  /* o reset global (* { margin: 0 }) anula o margin: auto do UA, que centraliza o dialog */
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: min(30rem, calc(100vw - 2.5rem));
+  width: 100%;
+  max-height: calc(100dvh - 2.5rem);
+  overflow: visible;
+  color: inherit;
+}
+.modal-dialog::backdrop {
+  background-color: var(--overlay, rgba(0, 0, 0, 0.6));
+  backdrop-filter: blur(10px);
+}
+/* animação de entrada: só acontece quando o dialog abre */
+.modal-dialog[open] .modal-box {
+  animation: modal-in 0.3s ease;
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+
+.modal-box {
+  background: var(--bg-modal);
+  border-radius: 16px;
+  max-width: 30rem;
+  width: 100%;
+  padding: 1.625rem 1.25rem;
+  position: relative;
+  max-height: calc(100dvh - 2.5rem);
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.125rem;
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: var(--text-subtle);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+.modal-input {
+  width: 100%;
+  padding: 0.8125rem 1rem;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  font-size: var(--fs-base);
+  margin-bottom: 1rem;
+}
+.modal-input::placeholder {
+  color: var(--text-subtle); /* o cinza padrão do navegador fica < 4,5:1 nos dois temas */
+  opacity: 1;
+}
+.modal-input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+.btn-modal {
+  width: 100%;
+  background-color: var(--accent-strong);
+  color: var(--on-accent);
+  padding: 0.875rem 1.25rem;
+  font-family: inherit;
+  font-size: var(--fs-base); /* <button> não herda o tamanho: sem isto fica em 13px */
+  font-weight: 700;
+  border-radius: var(--radius-btn-modal);
+  border: var(--btn-border);
+  cursor: pointer;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.modal-badge {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--pill-fg);
+  background: var(--pill-bg);
+  border: var(--pill-border);
+  padding: 0.3125rem 0.875rem;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+}
+.modal-label {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.375rem;
+}
+textarea.modal-input {
+  resize: vertical;
+  min-height: 5rem;
+  font-family: inherit;
+}
+.booking-consent {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin: 0.25rem 0 0.75rem;
+  cursor: pointer;
+}
+.booking-consent input {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--accent-ink);
+  flex-shrink: 0;
+  margin-top: 0.1875rem;
+  cursor: pointer;
+}
+.booking-error {
+  color: var(--danger);
+  font-size: var(--fs-sm);
+  margin: -0.5rem 0 0.875rem;
+}
+.booking-confirmation {
+  text-align: center;
+}
+.booking-confirmation p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+/* ============================================================
+   Aula Experimental: agenda (chips de dia + lista de horários)
+   ============================================================ */
+.schedule-section {
+  max-width: 68.75rem;
+}
+.schedule-intro {
+  color: var(--text-muted);
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+}
+/* Celular: os dias ficam numa faixa que rola para o lado */
+.day-chips {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none; /* esconde a barra de rolagem da faixa */
+  gap: 0.5rem;
+  margin-inline: -1.125rem;
+  margin-bottom: 1.75rem;
+  padding: 0.5rem 1.25rem;
+}
+.day-chip {
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  min-width: 3.5rem;
+  padding: 0 1.125rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+.day-chip:hover {
+  background: var(--hover-bg);
+  border-color: var(--hover-border);
+  color: var(--hover-fg);
+}
+.day-chip[aria-pressed="true"] {
+  background: var(--accent-strong);
+  border-color: var(--accent-ink);
+  color: var(--on-accent);
+  font-weight: 700;
+}
+.time-heading {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.875rem;
+}
+.time-heading:empty {
+  display: none;
+}
+.time-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(6rem, 100%), 1fr));
+  gap: 0.625rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+.time-slot {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-slot);
+  border-radius: 10px;
+  background: var(--slot-bg);
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    transform 0.1s;
+}
+.time-slot:hover {
+  background: var(--hover-bg);
+  border-color: var(--hover-border);
+  color: var(--hover-fg);
+}
+.time-slot:active {
+  background: var(--press-bg);
+  color: var(--press-fg);
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   Conheça também (cross-brand)
+   ============================================================ */
+.cross-brand-section {
+  max-width: var(--wrap);
+}
+.cross-brand-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.375rem;
+  text-align: left;
+}
+.cross-brand-text h3 {
+  margin: 0.375rem 0;
+  font-size: var(--fs-xl);
+}
+.cross-brand-text p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: var(--fs-base);
+}
+
+/* ============================================================
+   Rodapé
+   ============================================================ */
+/* Logotipo do rodapé: o SVG oficial da marca, pela altura */
+.footer-logo {
+  display: block;
+  height: 2.5rem;
+  width: auto;
+  margin-bottom: 0.75rem;
+}
+.site-footer-page {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding: 3rem 1.5rem 1.5rem;
+}
+.footer-inner {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.75rem;
+  text-align: left;
+}
+.footer-brand {
+  max-width: 21.25rem;
+}
+.footer-brand p,
+.footer-contact p {
+  font-size: var(--fs-base);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--social-fg);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+.footer-social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--social-icon-bg);
+  color: var(--accent-ink);
+}
+.footer-social:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-ink);
+}
+.footer-bottom {
+  max-width: var(--wrap);
+  margin: 2rem auto 0;
+  padding-top: 1.125rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer-bottom span {
+  font-size: var(--fs-sm);
+  color: var(--text-footnote);
+}
+
+/* ============================================================
+   Voltar ao topo
+   ============================================================ */
+.back-to-top {
+  position: fixed;
+  bottom: 1.875rem;
+  right: 1.875rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--fab-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--fab-offset));
+  transition: 0.3s;
+}
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   Responsivo (mobile first): tudo acima é o layout de celular.
+   Os blocos abaixo, em ordem crescente de largura, só acrescentam o que muda:
+   641px (40.0625em) · 769px (48.0625em) · 861px (53.8125em). A partir de 1101px
+   valem os blocos "Desktop largo" (aqui, em cta.css, em extras.css e nas marcas).
+   ============================================================ */
+@media (min-width: 40.0625em) {
+  section {
+    padding: 5rem 1.5rem;
+  }
+  .hero-section {
+    padding: 3.75rem 1.5rem 1.25rem;
+  }
+  .modal-box {
+    padding: 2.25rem 2rem;
+  }
+  .cross-brand-nav-link {
+    display: inline-flex;
+  }
+  /* dias: voltam a quebrar linha, sem faixa rolável */
+  .day-chips {
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-x: visible;
+    margin-inline: 0;
+    padding: 0;
+  }
+  .day-chip {
+    flex: 0 1 auto;
+  }
+  .cross-brand-card {
+    flex-direction: row;
+    align-items: center;
+    padding: 2rem;
+  }
+  .footer-inner {
+    flex-direction: row;
+    align-items: center;
+    text-align: start;
+  }
+}
+
+/* Tablet e desktop: sem hambúrguer, links do menu em linha dentro do cabeçalho */
+@media (min-width: 48.0625em) {
+  .site-header {
+    padding: 0.75rem 1.5rem;
+  }
+  .back-link {
+    padding: 0;
+    margin-left: 0;
+    min-width: auto;
+    justify-content: flex-start;
+  }
+  .back-text {
+    display: inline;
+  }
+  .menu-toggle {
+    display: none;
+  }
+  /* o painel vira a linha de links */
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.875rem;
+    position: static;
+    padding: 0;
+    background-color: transparent;
+    border-bottom: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .nav-link {
+    display: inline-flex;
+    width: auto;
+    padding: 0;
+    font-size: var(--nav-size);
+    border-radius: 0;
+  }
+  .nav-link-highlight {
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+  }
+}
+
+@media (min-width: 53.8125em) {
+  .hero-section {
+    grid-template-columns: 1fr 1.15fr;
+    gap: 3rem;
+    min-height: clamp(26.25rem, 62vh, 38.75rem);
+  }
+  .hero-image img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
+/* ============================================================
+   Ícones SVG: acompanham a raiz fluida (width/height do HTML ficam só de fallback)
+   ============================================================ */
+.back-arrow-icon,
+.back-to-top svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.highlight-svg,
+.meta-icon,
+.footer-social-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* ============================================================
+   Desktop largo (>= 1101px): container maior, hierarquia tipográfica harmônica e
+   composição em duas colunas. <= 1100px nada aqui vale (coluna única, como antes).
+   Os blocos equivalentes das marcas, de cta.css e de extras.css seguem o mesmo corte.
+   ============================================================ */
+@media (min-width: 68.8125em) {
+  :root {
+    --wrap: min(92%, 120rem); /* fluido: 92% da largura, teto de 120rem só para telas ultralargas */
+    --gap-col: clamp(2rem, 4.5%, 6rem); /* respiro entre colunas */
+    --fs-lg: 1.25rem;
+    --fs-xl: 1.25rem;
+    --fs-h2: 1.953rem;
+    --fs-hero: 3.052rem;
+  }
+
+  /* Todas as faixas de conteúdo usam a mesma largura (e as mesmas bordas) que a navbar */
+  .site-header,
+  .site-footer-page {
+    padding-inline: 0;
+  }
+  .navbar,
+  .hero-section,
+  .about-section,
+  .services-section,
+  .schedule-section,
+  .location-section,
+  .cross-brand-section,
+  .footer-inner,
+  .footer-bottom {
+    width: var(--wrap);
+    max-width: none;
+  }
+  .hero-section,
+  .about-section,
+  .services-section,
+  .schedule-section,
+  .location-section,
+  .cross-brand-section {
+    padding-inline: 0;
+  }
+
+  /* h2 de seção: um só tamanho (o hero fica fora) */
+  section:not(.hero-section) h2 {
+    font-size: var(--fs-h2);
+    line-height: 1.2;
+  }
+  .service-card h3,
+  .team-support-content h3 {
+    font-size: var(--fs-xl);
+  }
+  .cross-brand-nav-link {
+    font-size: var(--fs-base);
+  }
+  .brand-logo {
+    height: 2.75rem;
+  }
+  .footer-logo {
+    height: 3rem;
+  }
+  .services-subtitle {
+    max-width: 62ch;
+    margin: 0 auto;
+  }
+
+  /* Hero: texto 45% + foto grande (>= 50% do container), centralizados na vertical */
+  .hero-section {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--gap-col);
+    align-items: center;
+  }
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  /* Aula experimental (sem foto): título à esquerda, apoio à direita, preenchendo a largura */
+  #aula-hero .hero-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--gap-col);
+    align-items: end;
+  }
+  #aula-hero .hero-content h1,
+  #aula-hero .hero-content p {
+    margin-bottom: 0;
+  }
+
+  /* Sobre: texto à esquerda, destaques à direita (.about-content-col vira "transparente" para o grid) */
+  .about-container {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: var(--gap-col);
+    align-items: center;
+  }
+  .about-content-col {
+    display: contents;
+  }
+  .about-content-col > * {
+    grid-column: 1;
+    max-width: 68ch;
+  }
+  .about-content-col > .section-tag {
+    justify-self: start;
+  }
+  .about-content-col > .about-highlights {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: center;
+    max-width: none;
+  }
+  .highlight-item {
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 1.75rem;
+  }
+  .highlight-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+  .highlight-svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .highlight-item strong {
+    font-size: var(--fs-xl);
+  }
+
+  /* Localização: endereço à esquerda (centrado na altura do mapa), mapa e botão à direita */
+  .location-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+    grid-template-rows: 1fr auto auto 1fr auto;
+    column-gap: var(--gap-col);
+    text-align: left;
+  }
+  .location-section h2 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .location-section .location-address {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .location-section .location-address-header {
+    justify-content: flex-start;
+  }
+  .location-section .map-wrapper {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    margin-bottom: 1.5rem;
+  }
+  .location-section .map-wrapper iframe,
+  .location-section .map-facade {
+    height: clamp(20rem, 30vw, 28rem);
+  }
+  .location-section .location-actions {
+    grid-column: 2;
+    grid-row: 5;
+    margin-top: 0;
+  }
+
+  /* Agenda: texto de apoio com medida de leitura, horários em grade larga */
+  .schedule-intro {
+    max-width: 60ch;
+  }
+  .time-list {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 8rem), 1fr));
+    max-width: none;
+  }
+
+  /* Conheça também */
+  .cross-brand-card {
+    padding: 2.5rem 3rem;
+  }
+  .cross-brand-text p {
+    max-width: 62ch;
+  }
+}
+
+/* ============================================================
+   Foco visível e movimento reduzido
+   ============================================================ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Quem prefere menos movimento (configuração do sistema): sem animações nem rolagem suave */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

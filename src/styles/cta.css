@@ -1,0 +1,232 @@
+/* CTA compartilhado (PKZ e One To One): botões de ação, faixa de conversão e barra fixa do celular.
+   Carregar depois do CSS da marca. */
+
+/* ---------- Cores ---------- */
+:root {
+  --cta-bar-bg: var(--bg-base, #fff);
+  --cta-bar-line: var(--border, rgba(0, 0, 0, 0.15));
+  --cta-primary-bg: var(--accent, #014c6f);
+  --cta-primary-fg: #fff;
+  --cta-primary-line: var(--accent, #014c6f);
+  --cta-primary-hover-bg: var(--accent-light, #00bbff);
+  --cta-primary-hover-fg: #000;
+  --cta-secondary-bg: var(--bg-base, #fff);
+  --cta-secondary-fg: var(--accent, #014c6f);
+  --cta-secondary-line: var(--accent, #014c6f);
+  --cta-secondary-hover-bg: var(--bg-surface, #b3ecff);
+  --cta-band-bg: var(--accent, #014c6f);
+  --cta-band-fg: #fff;
+  --cta-band-sub: #fff;
+  --cta-band-line: transparent;
+  --cta-band-btn-fg: var(--accent, #014c6f);
+  --cta-band-btn-hover-bg: var(--bg-surface, #b3ecff);
+}
+
+[data-brand="pkz"] {
+  --cta-bar-bg: var(--bg-base, #020b18);
+  --cta-primary-bg: var(--accent-hover, #004099);
+  --cta-primary-line: #93c5fd;
+  --cta-primary-hover-bg: #0052c2;
+  --cta-primary-hover-fg: #fff;
+  --cta-secondary-bg: transparent;
+  --cta-secondary-fg: #fff;
+  --cta-secondary-line: #93c5fd;
+  --cta-secondary-hover-bg: rgba(147, 197, 253, 0.16);
+  --cta-band-bg: linear-gradient(135deg, #002d6b 0%, #004099 100%);
+  --cta-band-sub: #dbeafe;
+  --cta-band-line: rgba(147, 197, 253, 0.45);
+  --cta-band-btn-fg: #002d6b;
+  --cta-band-btn-hover-bg: #dbeafe;
+}
+
+[data-brand="oto"] {
+  --cta-band-bg:
+    radial-gradient(circle at 100% 0, rgba(0, 187, 255, 0.35), transparent 55%),
+    #014c6f;
+}
+
+/* ---------- Botões ---------- */
+.cta-btn {
+  gap: 0.625rem;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid transparent;
+  font-size: var(--fs-base);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.cta-btn-primary {
+  background-color: var(--cta-primary-bg);
+  color: var(--cta-primary-fg);
+  border-color: var(--cta-primary-line);
+}
+.cta-btn-primary:hover {
+  background-color: var(--cta-primary-hover-bg);
+  color: var(--cta-primary-hover-fg);
+  border-color: var(--cta-primary-hover-bg);
+  transform: none;
+}
+.cta-btn-secondary {
+  background-color: var(--cta-secondary-bg);
+  color: var(--cta-secondary-fg);
+  border-color: var(--cta-secondary-line);
+}
+.cta-btn-secondary:hover {
+  background-color: var(--cta-secondary-hover-bg);
+  color: var(--cta-secondary-fg);
+}
+.cta-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+/* ---------- Faixa de conversão ---------- */
+
+/* Celular: botões um embaixo do outro */
+section.cta-band {
+  width: min(67.5rem, 100% - 2.25rem);
+  max-width: none;
+  margin: 1.5rem auto 0;
+  padding: 2rem 1.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem 2.5rem;
+  flex-wrap: wrap;
+  text-align: left;
+  background: var(--cta-band-bg);
+  color: var(--cta-band-fg);
+  border: 1px solid var(--cta-band-line);
+  border-radius: 16px;
+}
+.cta-band-text {
+  flex: 1 1 22.5rem;
+  min-width: 0;
+}
+.cta-band h2 {
+  margin-bottom: 0.5rem;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.2;
+  color: var(--cta-band-fg);
+}
+[data-brand="pkz"] .cta-band h2 {
+  font-weight: 900;
+  font-style: italic;
+}
+.cta-band-sub {
+  max-width: 46ch;
+  font-size: var(--fs-lg);
+  color: var(--cta-band-sub);
+}
+.cta-band-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.cta-band-actions .cta-btn {
+  width: 100%;
+}
+.cta-band .cta-btn-primary {
+  background-color: #fff;
+  color: var(--cta-band-btn-fg);
+  border-color: #fff;
+}
+.cta-band .cta-btn-primary:hover {
+  background-color: var(--cta-band-btn-hover-bg);
+  color: var(--cta-band-btn-fg);
+  border-color: var(--cta-band-btn-hover-bg);
+}
+.cta-band .cta-btn-secondary {
+  background-color: transparent;
+  color: #fff;
+  border-color: #fff;
+}
+.cta-band .cta-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.cta-band a:focus-visible {
+  outline-color: #fff;
+}
+
+/* Tablet e desktop (a partir de 641px): botões lado a lado */
+@media (min-width: 40.0625em) {
+  section.cta-band {
+    padding: 2.75rem 2.5rem;
+  }
+  .cta-band-actions {
+    flex-direction: row;
+    width: auto;
+  }
+  .cta-band-actions .cta-btn {
+    width: auto;
+  }
+}
+
+/* Desktop (a partir de 1101px): faixa na largura do container */
+@media (min-width: 68.8125em) {
+  section.cta-band {
+    width: var(--wrap);
+    padding: 3rem clamp(2.5rem, 5%, 5rem);
+  }
+}
+
+/* ---------- Barra fixa de baixo (Agendar aula e WhatsApp) ---------- */
+
+/* Celular e tablet (até 1100px) */
+.mobile-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 120;
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--cta-bar-bg);
+  border-top: 1px solid var(--cta-bar-line);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.18);
+}
+.mobile-cta .cta-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-inline: 0.625rem;
+}
+/* abre espaço para a barra: rodapé, botão de voltar ao topo e foco do teclado */
+body {
+  padding-bottom: 4.25rem;
+}
+body .floating-actions {
+  bottom: 5rem;
+  right: 0.75rem;
+}
+html {
+  scroll-padding-bottom: 4.5rem;
+}
+
+/* Desktop (a partir de 1101px): sem a barra */
+@media (min-width: 68.8125em) {
+  .mobile-cta {
+    display: none;
+  }
+  body {
+    padding-bottom: 0;
+  }
+  body .floating-actions {
+    bottom: 1.5rem;
+    right: 0;
+  }
+  html {
+    scroll-padding-bottom: auto;
+  }
+}
