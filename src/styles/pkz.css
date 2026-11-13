@@ -17,6 +17,10 @@
   /* ---------- Acento ---------- */
   --accent: #002d6b; /* azul âncora: voltar ao topo, hover de chip/horário */
   --accent-strong: #004099; /* preenchimento de ação primária (botões, chip ativo) */
+  /* fundo do hero (shader): azul mais profundo e contrastado */
+  --shader-a: #0a2d6e;
+  --shader-b: #1e40af; /* mais escuro: o título claro precisa de contraste AA sobre o shader */
+  --shader-mix: 1;
   --accent-hover: var(--accent-strong); /* alias: cta.css lê este nome */
   --accent-ink: #93c5fd; /* azul claro: texto/ícone/borda de destaque sobre fundo escuro */
   --on-accent: #ffffff; /* texto sobre --accent / --accent-strong */
@@ -95,6 +99,18 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+/* Com o título dividido em palavras, o degradê passa para cada palavra (um fundo recortado
+   no pai some nos filhos animados com transform) */
+.hero-content h1:has(.palavra) {
+  background: none;
+}
+.hero-content h1 .palavra-i {
+  background: linear-gradient(180deg, #ffffff 30%, var(--accent-ink) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 0.08em; /* o itálico pesado vaza para a direita e era cortado */
 }
 .hero-content p {
   font-size: 1.15rem;
@@ -275,7 +291,7 @@ select.modal-input option {
 /* ---------- Responsivo (marca), mobile first: o CSS acima é o celular ---------- */
 @media (min-width: 40.0625em) {
   .hero-content h1 {
-    font-size: var(--fs-hero);
+    font-size: clamp(2.2rem, 5.2vw, 4.4rem); /* "Profissional" cabe na coluna sem quebrar no meio */
     margin-bottom: 1.25rem;
   }
   .hero-content p {

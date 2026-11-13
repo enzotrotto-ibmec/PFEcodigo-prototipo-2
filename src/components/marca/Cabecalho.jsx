@@ -2,7 +2,7 @@ import { useState } from "react";
 import LinkInterno from "../LinkInterno.jsx";
 import { IconeSetaVoltar } from "../Icones.jsx";
 import { asset } from "../../utils/asset.js";
-import { outraMarca } from "../../data/marcas.js";
+import { MARCAS, outraMarca } from "../../data/marcas.js";
 
 // Cabeçalho das páginas das marcas: voltar ao portal, link para a outra marca, logo e menu.
 //
@@ -76,6 +76,13 @@ export default function Cabecalho({ marca, onAbrirContato, contatoDestacado = fa
                 Localização
               </LinkInterno>
             </li>
+            {marca.id !== "fisio" && (
+              <li>
+                <LinkInterno to={MARCAS.fisio.rota} className="nav-link" onClick={fecharMenu}>
+                  {MARCAS.fisio.nome}
+                </LinkInterno>
+              </li>
+            )}
             <li>
               {/* Não troca de página, só abre a janela: por isso é <button>, não link */}
               <button

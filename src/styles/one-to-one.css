@@ -19,6 +19,9 @@
   --accent-strong: var(--accent); /* preenchimento de ação primária (botões, chip ativo) */
   --accent-light: #00bbff; /* ciano: hover/pressionado (cta.css lê este nome) */
   --accent-ink: var(--accent); /* cor de texto/ícone/borda de destaque */
+  --shader-a: #b3ecff; /* paleta clara do fundo do hero (shader) */
+  --shader-b: #00bbff;
+  --shader-mix: 0.6;
   --on-accent: #ffffff; /* texto sobre --accent */
 
   /* ---------- Texto ---------- */

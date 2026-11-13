@@ -6,10 +6,12 @@ import BotaoWhatsapp from "./BotaoWhatsapp.jsx";
 export default function BarraAcoesMobile({ marca }) {
   return (
     <nav className="mobile-cta" aria-label="Ações rápidas">
-      <LinkInterno to={`${marca.rota}/aula-experimental`} className="btn cta-btn cta-btn-primary">
-        Agendar aula
-      </LinkInterno>
-      <BotaoWhatsapp marca={marca} />
+      {marca.agendamento !== false && (
+        <LinkInterno to={`${marca.rota}/aula-experimental`} className="btn cta-btn cta-btn-primary">
+          Agendar aula
+        </LinkInterno>
+      )}
+      <BotaoWhatsapp marca={marca} primario={marca.agendamento === false} />
     </nav>
   );
 }

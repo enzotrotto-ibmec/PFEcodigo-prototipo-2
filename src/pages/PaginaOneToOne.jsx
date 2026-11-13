@@ -1,3 +1,4 @@
+import FaixaNumeros from "../components/marca/FaixaNumeros.jsx";
 import LayoutMarca from "../components/marca/LayoutMarca.jsx";
 import Hero from "../components/marca/Hero.jsx";
 import Sobre from "../components/marca/Sobre.jsx";
@@ -8,6 +9,7 @@ import ConhecaTambem from "../components/marca/ConhecaTambem.jsx";
 import SecaoServicos from "../components/one-to-one/SecaoServicos.jsx";
 import LinkInterno from "../components/LinkInterno.jsx";
 import { MARCAS } from "../data/marcas.js";
+import { ROTAS } from "../data/seo.js";
 
 // Página inicial do Studio One To One (rota /one-to-one). Era o pages/one-to-one.html do vanilla.
 // Usa os mesmos componentes da PKZ, com outros dados (props).
@@ -61,7 +63,7 @@ const PERGUNTAS = [
 
 export default function PaginaOneToOne() {
   return (
-    <LayoutMarca marcaId="oto" titulo="Studio One To One | Personal Training na Barra da Tijuca" paginaInicial>
+    <LayoutMarca marcaId="oto" titulo={ROTAS["/one-to-one"].titulo} paginaInicial>
       <Hero
         titulo="Evolua com Propósito"
         subtitulo="Atendimento individualizado e ambiente sofisticado."
@@ -85,6 +87,14 @@ export default function PaginaOneToOne() {
           <strong>Fisioterapia</strong> e <strong>Nutrição</strong>.
         </p>
       </Sobre>
+
+      <FaixaNumeros
+        itens={[
+          { valor: marca.modalidades.length, rotulo: "serviços integrados" },
+          { valor: marca.horarios.dias.length, rotulo: "dias de atendimento por semana" },
+          { valor: marca.horarios.horas.length, rotulo: "horários por dia" },
+        ]}
+      />
 
       <SecaoServicos />
       <Faq marca={marca} itens={PERGUNTAS} />

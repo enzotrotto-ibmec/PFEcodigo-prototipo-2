@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ideias de repaginação | PKZ e One To One</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root { --pkz-bg:#020b18; --pkz-surface:#001c42; --pkz-accent:#004099; --pkz-ink:#93c5fd;
+          --oto-bg:#ffffff; --oto-surface:#b3ecff; --oto-accent:#014c6f; --oto-light:#00bbff; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:Inter,system-ui,sans-serif; background:#111; color:#eee; line-height:1.5; }
+  img { display:block; max-width:100%; }
+  .topo { position:sticky; top:0; z-index:50; background:#0b0b0bee; backdrop-filter:blur(8px); padding:.75rem 1rem; display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; border-bottom:1px solid #333; }
+  .topo strong { margin-right:auto; font-size:.9rem; }
+  .topo a { color:#fff; text-decoration:none; font-size:.85rem; padding:.4rem .8rem; border:1px solid #555; border-radius:999px; }
+  .topo a:hover { background:#fff; color:#000; }
+  .intro { max-width:60rem; margin:0 auto; padding:2.5rem 1rem 1rem; }
+  .intro h1 { font-size:clamp(1.6rem,4vw,2.4rem); margin-bottom:.5rem; }
+  .intro p { color:#bbb; }
+  .direcao { padding:3rem 1rem; border-top:1px solid #333; }
+  .direcao > header { max-width:70rem; margin:0 auto 1.5rem; }
+  .direcao > header h2 { font-size:1.6rem; }
+  .direcao > header p { color:#aaa; }
+  .tag { display:inline-block; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; padding:.15rem .6rem; border:1px solid #666; border-radius:999px; color:#ccc; margin-bottom:.4rem; }
+  .par { max-width:70rem; margin:0 auto 2rem; display:grid; gap:1.5rem; }
+  @media (min-width:60rem){ .par { grid-template-columns:1fr 1fr; } }
+  .tela { border-radius:14px; overflow:hidden; border:1px solid #333; position:relative; }
+  .tela > small { position:absolute; top:.5rem; left:.5rem; z-index:5; background:#000a; color:#fff; padding:.1rem .5rem; border-radius:6px; font-size:.7rem; }
+
+  /* ---------- Direção 1: Editorial ---------- */
+  .ed-pkz { background:var(--pkz-bg); color:#fff; font-family:Montserrat,sans-serif; padding:2.5rem 1.5rem 0; min-height:30rem; display:grid; align-content:space-between; }
+  .ed-pkz .grande { font-weight:900; font-style:italic; font-size:clamp(2.2rem,5.2vw,4.4rem); line-height:.95; letter-spacing:-.03em; background:linear-gradient(180deg,#fff 35%,var(--pkz-ink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .ed-pkz .linha { display:flex; justify-content:space-between; gap:1rem; align-items:flex-end; flex-wrap:wrap; margin:1.5rem 0; font-size:.95rem; color:#cbd5e1; font-family:Inter,sans-serif; }
+  .ed-pkz .linha b { color:var(--pkz-ink); }
+  .ed-pkz .foto { margin:0 -1.5rem; height:12rem; background-size:cover; background-position:center 30%; }
+  .ed-oto { background:var(--oto-bg); color:var(--oto-accent); font-family:'Plus Jakarta Sans',sans-serif; display:grid; grid-template-columns:1.1fr .9fr; min-height:30rem; }
+  .ed-oto .txt { padding:2.5rem 1.5rem; display:grid; align-content:space-between; }
+  .ed-oto .grande { font-weight:800; font-size:clamp(2.2rem,4.6vw,4rem); line-height:.98; letter-spacing:-.03em; }
+  .ed-oto .grande em { font-style:normal; color:var(--oto-light); }
+  .ed-oto p { max-width:30ch; color:#355; }
+  .ed-oto .foto { background-size:cover; background-position:center; min-height:100%; }
+  .btn { display:inline-block; margin-top:1rem; background:var(--oto-accent); color:#fff; padding:.8rem 1.6rem; border-radius:999px; font-weight:700; text-decoration:none; }
+  .btn.escuro { background:var(--pkz-accent); border-radius:6px; border:1px solid var(--pkz-ink); }
+
+  /* ---------- Direção 2: Bento ---------- */
+  .bento { display:grid; gap:.75rem; padding:1rem; grid-template-columns:repeat(4,1fr); grid-auto-rows:7rem; }
+  .bento > div { border-radius:18px; padding:1.1rem; position:relative; overflow:hidden; }
+  .bento .t { grid-column:span 2; grid-row:span 3; display:flex; flex-direction:column; justify-content:flex-end; }
+  .bento .f { grid-column:span 2; grid-row:span 2; background-size:cover; background-position:center; }
+  .bento .n { font-size:.8rem; display:flex; flex-direction:column; justify-content:flex-end; }
+  .bento .n b { font-size:2.6rem; line-height:1; }
+  .bento .c { grid-column:span 2; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+  .bento h3 { font-size:clamp(1.2rem,2.6vw,2rem); line-height:1.05; margin-bottom:.4rem; }
+  .b-pkz { background:var(--pkz-bg); font-family:Montserrat,sans-serif; }
+  .b-pkz > div { background:var(--pkz-surface); border:1px solid #ffffff1f; color:#fff; }
+  .b-pkz .n b { color:var(--pkz-ink); }
+  .b-pkz .c { background:linear-gradient(135deg,#002d6b,#004099); }
+  .b-oto { background:#eef9fd; font-family:'Plus Jakarta Sans',sans-serif; }
+  .b-oto > div { background:#fff; border:1px solid #014c6f22; color:var(--oto-accent); }
+  .b-oto .n { background:var(--oto-surface); }
+  .b-oto .c { background:var(--oto-accent); color:#fff; }
+  .b-oto h3 { font-weight:800; }
+  @media (max-width:40rem){ .bento { grid-template-columns:repeat(2,1fr); } .bento .t,.bento .f,.bento .c { grid-column:span 2; } }
+
+  /* ---------- Direção 3: Cinemática ---------- */
+  .cine { min-height:32rem; position:relative; display:grid; align-items:end; padding:2rem 1.5rem; background-size:cover; background-position:center; isolation:isolate; }
+  .cine::before { content:""; position:absolute; inset:0; z-index:-1; }
+  .cine .aurora { position:absolute; inset:0; z-index:-1; background:radial-gradient(60% 50% at 20% 30%,var(--c1),transparent 70%),radial-gradient(50% 60% at 85% 70%,var(--c2),transparent 70%); animation:flutua 14s ease-in-out infinite alternate; }
+  @keyframes flutua { to { transform:translate3d(3%,-4%,0) scale(1.08); } }
+  .cine h3 { font-size:clamp(2.4rem,7vw,5rem); line-height:1; max-width:14ch; }
+  .cine p { max-width:38ch; margin:.8rem 0 1.2rem; opacity:.9; }
+  .c-pkz { --c1:#1e40af99; --c2:#0a2d6e; color:#fff; font-family:Montserrat,sans-serif; background-color:var(--pkz-bg); }
+  .c-pkz h3 { font-weight:900; font-style:italic; }
+  .c-pkz::before { background:linear-gradient(0deg,var(--pkz-bg) 5%,#020b1866 60%,#020b18aa); }
+  .c-oto { --c1:#00bbff55; --c2:#b3ecff; color:var(--oto-accent); font-family:'Plus Jakarta Sans',sans-serif; background-color:#fff; }
+  .c-oto h3 { font-weight:800; }
+  .c-oto::before { background:linear-gradient(0deg,#ffffffee 8%,#ffffff55 60%,#ffffff99); }
+  .cards { display:grid; grid-auto-flow:column; grid-auto-columns:78%; gap:.75rem; overflow-x:auto; padding:1rem; scroll-snap-type:x mandatory; }
+  .cards > div { scroll-snap-align:start; border-radius:18px; min-height:11rem; padding:1.1rem; display:flex; flex-direction:column; justify-content:flex-end; background-size:cover; background-position:center; position:relative; overflow:hidden; color:#fff; font-weight:700; font-size:1.2rem; }
+  .cards > div::before { content:""; position:absolute; inset:0; background:linear-gradient(0deg,#000c,#0000 70%); }
+  .cards > div span { position:relative; }
+  .prosecontras { max-width:70rem; margin:0 auto; display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(16rem,1fr)); }
+  .prosecontras div { background:#1a1a1a; border:1px solid #333; border-radius:12px; padding:1rem; font-size:.9rem; color:#ccc; }
+  .prosecontras h4 { color:#fff; margin-bottom:.3rem; }
+  @media (max-width:40rem){ .ed-oto { grid-template-columns:1fr; } .ed-oto .foto { min-height:14rem; order:-1; } }
+</style>
+</head>
+<body>
+<nav class="topo" aria-label="Direções">
+  <strong>Ideias de repaginação</strong>
+  <a href="#d1">1 · Editorial</a><a href="#d2">2 · Bento</a><a href="#d3">3 · Cinemática</a>
+</nav>
+
+<section class="intro">
+  <h1>3 direções para repaginar o site</h1>
+  <p>Mantêm a paleta, as fontes (Montserrat na PKZ, Plus Jakarta Sans na One To One) e os logos. Só mudam o layout, o ritmo e o movimento. São protótipos de tela, não código do site. Cada direção mostra o hero ou a seção principal da PKZ (escuro) e da One To One (claro).</p>
+</section>
+
+<!-- ============ DIREÇÃO 1 ============ -->
+<section class="direcao" id="d1">
+  <header>
+    <span class="tag">Direção 1</span>
+    <h2>Editorial</h2>
+    <p>Tipografia gigante, muito espaço, foto como protagonista. Parece revista de moda esportiva. Mais calma e cara.</p>
+  </header>
+  <div class="par">
+    <div class="tela"><small>PKZ · desktop/mobile</small>
+      <div class="ed-pkz">
+        <div class="grande">Treine<br>como um<br>profissional</div>
+        <div class="linha"><span>Alto rendimento e performance garantida.<br><b>Karatê · Jiu-Jitsu · Vôlei · Futebol</b></span><a class="btn escuro" href="#d1">Aula experimental</a></div>
+        <div class="foto" style="background-image:url('{{IMG:pkz}}')"></div>
+      </div>
+    </div>
+    <div class="tela"><small>One To One · desktop/mobile</small>
+      <div class="ed-oto">
+        <div class="txt">
+          <div class="grande">Evolua com <em>propósito.</em></div>
+          <div><p>Atendimento individualizado e ambiente sofisticado.</p><a class="btn" href="#d1">Aula experimental</a></div>
+        </div>
+        <div class="foto" style="background-image:url('{{IMG:oto}}')"></div>
+      </div>
+    </div>
+  </div>
+  <div class="prosecontras">
+    <div><h4>Prós</h4>Hierarquia clara, a marca respira, combina com o "premium". Barato de animar (texto entra palavra a palavra).</div>
+    <div><h4>Contras</h4>Depende de fotos muito boas. Mostra menos informação de uma vez; o conteúdo desce mais.</div>
+    <div><h4>Esforço</h4>Médio: refazer hero, "Sobre" e cards; CSS e poucos componentes.</div>
+  </div>
+</section>
+
+<!-- ============ DIREÇÃO 2 ============ -->
+<section class="direcao" id="d2">
+  <header>
+    <span class="tag">Direção 2</span>
+    <h2>Bento</h2>
+    <p>Grade de blocos de tamanhos diferentes: promessa, foto, números reais (modalidades, dias e horários da agenda) e CTA, tudo visível de relance. Moderna, estilo painel de produto.</p>
+  </header>
+  <div class="par">
+    <div class="tela"><small>PKZ</small>
+      <div class="bento b-pkz">
+        <div class="t"><h3>Alto rendimento para todas as idades</h3><span>Treine como um profissional.</span></div>
+        <div class="f" style="background-image:url('{{IMG:pkz}}')"></div>
+        <div class="n"><b>6</b>modalidades</div>
+        <div class="n"><b>7</b>dias de aula</div>
+        <div class="c"><span>Pronto para subir de nível?</span><a class="btn escuro" href="#d2">Agendar aula</a></div>
+      </div>
+    </div>
+    <div class="tela"><small>One To One</small>
+      <div class="bento b-oto">
+        <div class="t"><h3>Evolua com propósito</h3><span>Personal, fisioterapia e nutrição, no seu ritmo.</span></div>
+        <div class="f" style="background-image:url('{{IMG:oto}}')"></div>
+        <div class="n"><b>3</b>serviços</div>
+        <div class="n"><b>16</b>horários por dia</div>
+        <div class="c"><span>Um treino pensado só para você</span><a class="btn" style="background:#fff;color:#014c6f" href="#d2">Agendar</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="prosecontras">
+    <div><h4>Prós</h4>Mostra tudo de uma vez, escaneável, ótima no celular, números reais dão confiança.</div>
+    <div><h4>Contras</h4>Mais "app" que "academia"; fotos ficam menores. Exige cuidado para não ficar poluída.</div>
+    <div><h4>Esforço</h4>Médio: uma grade CSS nova + reaproveita FaixaNumeros e cards atuais.</div>
+  </div>
+</section>
+
+<!-- ============ DIREÇÃO 3 ============ -->
+<section class="direcao" id="d3">
+  <header>
+    <span class="tag">Direção 3</span>
+    <h2>Cinemática</h2>
+    <p>Hero em tela cheia com o shader/aurora por trás, texto sobre a foto e seções que prendem na rolagem (pin + scrub no GSAP). Cards horizontais grandes com arrasto.</p>
+  </header>
+  <div class="par">
+    <div class="tela"><small>PKZ (a aurora se mexe sozinha)</small>
+      <div class="cine c-pkz" style="background-image:url('{{IMG:pkz}}')"><div class="aurora"></div>
+        <div><h3>Treine como um profissional</h3><p>Alto rendimento e performance garantida.</p><a class="btn escuro" href="#d3">Aula experimental</a></div>
+      </div>
+      <div class="cards" style="background:var(--pkz-bg)">
+        <div style="background-image:url('{{IMG:karate}}')"><span>Karatê</span></div>
+        <div style="background-image:url('{{IMG:jiu}}')"><span>Jiu-Jitsu</span></div>
+        <div style="background-image:url('{{IMG:volei}}')"><span>Vôlei</span></div>
+      </div>
+    </div>
+    <div class="tela"><small>One To One</small>
+      <div class="cine c-oto" style="background-image:url('{{IMG:oto}}')"><div class="aurora"></div>
+        <div><h3>Evolua com propósito</h3><p>Atendimento individualizado e ambiente sofisticado.</p><a class="btn" href="#d3">Aula experimental</a></div>
+      </div>
+      <div class="cards" style="background:#fff">
+        <div style="background-image:url('{{IMG:pt}}')"><span>Personal Training</span></div>
+        <div style="background-image:url('{{IMG:fisio}}')"><span>Fisioterapia</span></div>
+        <div style="background-image:url('{{IMG:nutri}}')"><span>Nutrição</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="prosecontras">
+    <div><h4>Prós</h4>O mais impactante e o que mais parece "site de US$ 10.000". Usa o que já temos (GSAP, shader).</div>
+    <div><h4>Contras</h4>Mais pesado e mais difícil de acertar em celular fraco. Fotos precisam de boa resolução.</div>
+    <div><h4>Esforço</h4>Grande: pin + scrub em várias seções e testes em muitos aparelhos.</div>
+  </div>
+</section>
+</body>
+</html>

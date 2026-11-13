@@ -1,12 +1,13 @@
 import EstilosDaPagina from "../components/EstilosDaPagina.jsx";
 import LinkInterno from "../components/LinkInterno.jsx";
 import legalCss from "../styles/legal.css?inline";
+import { ROTAS } from "../data/seo.js";
 
 // Política de Privacidade (rota /privacidade). Era o pages/privacidade.html.
 export default function Privacidade() {
   return (
     <div className="pagina">
-      <title>Política de Privacidade | PKZ Lab e Studio One To One</title>
+      <title>{ROTAS["/privacidade"].titulo}</title>
       <meta name="theme-color" content="#0e1116" />
       <EstilosDaPagina folhas={[legalCss]} />
 

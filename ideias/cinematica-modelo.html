@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulação cinemática | PKZ · One To One · Fisioterapia</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,900;1,900&family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* Tokens por marca: mesma paleta e fontes do site atual */
+  :root { --fd:'Plus Jakarta Sans',system-ui,sans-serif; --fb:Inter,system-ui,sans-serif; }
+  [data-tema="pkz"]   { --bg:#020b18; --surface:#001c42; --accent:#004099; --ink:#93c5fd; --text:#fff; --muted:#cbd5e1; --on:#fff; --shade:#020b18; --c1:#1e40af; --c2:#0a2d6e; --fd:Montserrat,system-ui,sans-serif; --fstyle:italic; --fw:900; }
+  [data-tema="oto"]   { --bg:#fff; --surface:#b3ecff; --accent:#014c6f; --ink:#00bbff; --text:#04202b; --muted:#014c6f; --on:#fff; --shade:#014c6f; --c1:#00bbff; --c2:#b3ecff; --fstyle:normal; --fw:800; }
+  [data-tema="fisio"] { --bg:#fff; --surface:#d6f5ee; --accent:#0f5f58; --ink:#2dd4bf; --text:#04211e; --muted:#0f5f58; --on:#fff; --shade:#0f5f58; --c1:#2dd4bf; --c2:#d6f5ee; --fstyle:normal; --fw:800; }
+  [data-tema="home"]  { --bg:#020b18; --surface:#012133; --accent:#014c6f; --ink:#00bbff; --text:#fff; --muted:#cbd5e1; --on:#fff; --shade:#020b18; --c1:#1e40af; --c2:#00bbff; --fd:'Barlow Condensed',system-ui,sans-serif; --fstyle:italic; --fw:900; }
+  [data-marca="pkz"]   { --mc:#004099; --mi:#93c5fd; --mf:Montserrat,sans-serif; --mp:900; --ms:italic; }
+  [data-marca="oto"]   { --mc:#014c6f; --mi:#00bbff; --mf:'Plus Jakarta Sans',sans-serif; --mp:800; --ms:normal; }
+  [data-marca="fisio"] { --mc:#0f5f58; --mi:#2dd4bf; --mf:'Plus Jakarta Sans',sans-serif; --mp:800; --ms:normal; }
+  * { box-sizing:border-box; margin:0; }
+  html { scroll-behavior:auto; }
+  body { font-family:var(--fb); background:var(--bg); color:var(--text); overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+  img { display:block; max-width:100%; }
+  a { color:inherit; }
+  button { font:inherit; cursor:pointer; }
+
+  /* ---- Cabeçalho ---- */
+  header { position:fixed; inset:0 0 auto 0; z-index:100; display:flex; align-items:center; gap:1rem; padding:.9rem clamp(1rem,4vw,3rem); color:#fff; transition:background .35s, backdrop-filter .35s; }
+  header.sólido { background:color-mix(in srgb,var(--shade) 88%,transparent); backdrop-filter:blur(10px); }
+  header .logo { height:2rem; width:auto; margin-right:auto; }
+  nav { display:flex; gap:.4rem; overflow-x:auto; scrollbar-width:none; }
+  nav button { background:transparent; color:#fff; border:1px solid #ffffff55; border-radius:999px; padding:.45rem .9rem; font-weight:700; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; transition:background .25s,color .25s; }
+  nav button:hover { background:#ffffff22; }
+  nav button[aria-current="true"] { background:#fff; color:#000; border-color:#fff; }
+  @media (max-width:40rem){ header { flex-wrap:wrap; } header .logo { height:1.6rem; } nav { width:100%; } }
+
+  /* ---- Hero ---- */
+  .hero { position:relative; min-height:100svh; display:grid; align-items:end; padding:7rem clamp(1.2rem,5vw,4rem) clamp(2.5rem,8vh,5rem); color:#fff; overflow:hidden; isolation:isolate; }
+  .hero-img { position:absolute; inset:-6% 0 -6% 0; z-index:-3; background-size:cover; background-position:center 30%; }
+  .hero-aurora { position:absolute; inset:-10%; z-index:-2; mix-blend-mode:soft-light; background:radial-gradient(55% 50% at 20% 30%,var(--c1),transparent 70%),radial-gradient(50% 60% at 85% 75%,var(--c2),transparent 70%); animation:flutua 14s ease-in-out infinite alternate; opacity:.9; }
+  @keyframes flutua { to { transform:translate3d(4%,-5%,0) scale(1.12); } }
+  .hero-shade { position:absolute; inset:0; z-index:-1; background:linear-gradient(0deg,color-mix(in srgb,var(--shade) 92%,transparent) 4%,color-mix(in srgb,var(--shade) 45%,transparent) 55%,color-mix(in srgb,var(--shade) 70%,transparent)); }
+  .grao { position:fixed; inset:0; pointer-events:none; z-index:90; opacity:.07; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  h1 { font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(2.8rem,9vw,8rem); line-height:.95; letter-spacing:-.03em; max-width:14ch; }
+  .pal { display:inline-block; overflow:hidden; vertical-align:top; padding-bottom:.12em; margin-bottom:-.12em; padding-right:.06em; }
+  .pal-i { display:inline-block; }
+  .hero p { margin:1.2rem 0 1.6rem; max-width:34ch; font-size:clamp(1rem,2vw,1.35rem); opacity:.92; }
+  .btn { display:inline-flex; align-items:center; gap:.5rem; padding:.95rem 1.8rem; border-radius:999px; background:var(--ink); color:#04121f; font-weight:800; text-decoration:none; border:0; will-change:transform; }
+  [data-tema="pkz"] .btn { background:var(--accent); color:#fff; border:1px solid var(--ink); border-radius:8px; }
+  .cue { position:absolute; right:clamp(1.2rem,5vw,4rem); bottom:clamp(2.5rem,8vh,5rem); font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; writing-mode:vertical-rl; opacity:.8; }
+  .cue::after { content:""; display:block; width:1px; height:3rem; margin:.6rem auto 0; background:#fff; animation:cue 1.8s ease-in-out infinite; transform-origin:top; }
+  @keyframes cue { 0%{transform:scaleY(0)} 60%{transform:scaleY(1)} 100%{transform:scaleY(1);opacity:0} }
+
+  /* ---- Manifesto (fixo na tela; as palavras acendem com a rolagem) ---- */
+  .manifesto { min-height:100svh; display:grid; place-items:center; padding:5rem clamp(1.2rem,6vw,6rem); background:var(--bg); }
+  .manifesto p { font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(1.7rem,4.4vw,3.8rem); line-height:1.15; letter-spacing:-.02em; max-width:24ch; max-width:min(60rem,100%); }
+  .manifesto .w { opacity:.16; }
+  .tag { display:inline-block; font-size:.75rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink); border:1px solid color-mix(in srgb,var(--ink) 50%,transparent); padding:.3rem .9rem; border-radius:999px; margin-bottom:1.5rem; }
+  [data-tema="oto"] .tag, [data-tema="fisio"] .tag { color:var(--accent); border-color:var(--accent); }
+
+  /* ---- Cards com rolagem horizontal ---- */
+  .h-sec { height:100svh; overflow:hidden; display:grid; align-content:center; background:var(--surface); }
+  .h-sec h2 { font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(1.8rem,4vw,3.4rem); padding:0 clamp(1.2rem,5vw,4rem) 1.5rem; letter-spacing:-.02em; color:var(--text); }
+  [data-tema="pkz"] .h-sec { background:#001c42; }
+  .h-track { display:flex; gap:clamp(.8rem,2vw,1.5rem); padding:0 clamp(1.2rem,5vw,4rem); width:max-content; }
+  .card { position:relative; width:clamp(16rem,38vw,30rem); height:clamp(19rem,52vh,30rem); border-radius:22px; overflow:hidden; color:#fff; display:flex; align-items:flex-end; padding:1.3rem; flex:none; }
+  .card .bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform .8s cubic-bezier(.16,1,.3,1); }
+  .card:hover .bg { transform:scale(1.07); }
+  .card::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg,#000d 6%,#0000 65%); }
+  .card span { position:relative; z-index:1; font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(1.3rem,2.6vw,2rem); line-height:1.1; }
+  .card small { position:relative; z-index:1; display:block; font-family:var(--fb); font-style:normal; font-weight:500; font-size:.9rem; opacity:.9; margin-top:.3rem; }
+  .card.texto { background:linear-gradient(135deg,var(--accent),var(--c2)); }
+  .card.texto::after { display:none; }
+
+  /* ---- Números ---- */
+  .numeros { display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:2rem; padding:clamp(4rem,12vh,8rem) clamp(1.2rem,5vw,4rem); background:var(--bg); }
+  .numeros b { display:block; font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(4rem,11vw,9rem); line-height:.9; color:var(--ink); }
+  [data-tema="oto"] .numeros b, [data-tema="fisio"] .numeros b { color:var(--accent); }
+  .numeros span { color:var(--muted); font-size:1.05rem; }
+
+  /* ---- CTA ---- */
+  .cta { position:relative; min-height:80svh; display:grid; place-items:center; text-align:center; padding:5rem 1.5rem; overflow:hidden; isolation:isolate; background:var(--accent); color:var(--on); }
+  .cta .aurora2 { position:absolute; inset:-20%; z-index:-1; background:radial-gradient(40% 40% at 25% 35%,var(--c1),transparent 70%),radial-gradient(40% 50% at 80% 70%,var(--c2),transparent 70%); opacity:.7; animation:flutua 16s ease-in-out infinite alternate; }
+  .cta h2 { font-family:var(--fd); font-weight:var(--fw); font-style:var(--fstyle); font-size:clamp(2.4rem,8vw,6.5rem); line-height:.98; letter-spacing:-.03em; max-width:14ch; margin:0 auto 2rem; }
+  .cta .btn { background:#fff; color:var(--accent); border-radius:999px; border:0; font-size:1.1rem; padding:1.1rem 2.2rem; }
+
+  /* ---- Rodapé ---- */
+  footer { background:#04101a; color:#cbd5e1; padding:3rem clamp(1.2rem,5vw,4rem); display:grid; gap:2rem; grid-template-columns:repeat(auto-fit,minmax(14rem,1fr)); }
+  footer img { height:2.2rem; width:auto; margin-bottom:.8rem; }
+  footer h3 { color:#fff; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; margin-bottom:.6rem; }
+  footer button { display:block; background:none; border:0; color:#93c5fd; padding:.35rem 0; text-align:left; font-weight:600; }
+  footer button:hover { text-decoration:underline; }
+
+  /* ---- Home do ecossistema ---- */
+  header .txt { margin-right:auto; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; letter-spacing:.06em; text-transform:uppercase; font-size:1.35rem; display:none; }
+  [data-tema="home"] header .txt { display:block; } [data-tema="home"] header .logo { display:none; }
+  .tri { position:absolute; inset:0; z-index:-3; display:grid; grid-template-rows:repeat(3,1fr); }
+  @media (min-width:48em){ .tri { grid-template-rows:none; grid-template-columns:repeat(3,1fr); } }
+  .tri-faixa { position:relative; overflow:hidden; border-top:1px solid #ffffff40; }
+  .tri-faixa:first-child { border-top:0; }
+  @media (min-width:48em){ .tri-faixa { border-top:0; border-left:1px solid #ffffff40; } .tri-faixa:first-child { border-left:0; } }
+  .tri-faixa .im { position:absolute; inset:-4% 0; background-size:cover; background-position:center; }
+  .tri-faixa::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg,color-mix(in srgb,var(--mc) 60%,transparent),transparent 65%); }
+  [data-tema="home"] h1 { font-family:'Barlow Condensed',sans-serif; }
+  .eco { padding:clamp(3rem,8vh,6rem) clamp(1.2rem,5vw,4rem) clamp(4rem,10vh,7rem); background:linear-gradient(180deg,#020b18,#051a30 60%,#012133); }
+  .eco h2 { font-family:var(--fd); font-weight:900; font-style:italic; font-size:clamp(2.2rem,6vw,5rem); line-height:1; }
+  .eco > p { margin:.8rem 0 2.5rem; color:#cbd5e1; max-width:44ch; }
+  .eco-grid { display:grid; gap:1.2rem; }
+  @media (min-width:60em){ .eco-grid { grid-template-columns:repeat(3,1fr); } }
+  .eco-card { position:relative; overflow:hidden; min-height:clamp(26rem,62vh,34rem); border-radius:22px; display:flex; align-items:flex-end; border:1px solid #ffffff24; isolation:isolate; color:#fff; }
+  .eco-card .bg { position:absolute; inset:0; z-index:-2; background-size:cover; background-position:center; transition:transform .9s cubic-bezier(.16,1,.3,1); }
+  .eco-card:hover .bg { transform:scale(1.06); }
+  .eco-card::before { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(0deg,color-mix(in srgb,var(--mc) 94%,#000) 14%,color-mix(in srgb,var(--mc) 78%,transparent) 58%,color-mix(in srgb,var(--mc) 20%,transparent)); }
+  .eco-corpo { padding:1.6rem; display:grid; gap:.9rem; justify-items:start; }
+  .eco-passo { font-family:var(--mf); font-weight:var(--mp); font-style:var(--ms); font-size:.95rem; letter-spacing:.12em; text-transform:uppercase; color:var(--mi); text-shadow:0 1px 8px #0009; }
+  .eco-corpo img { height:2.6rem; width:auto; }
+  .eco-corpo p { max-width:30ch; line-height:1.45; color:#f1f5f9; }
+  .eco-corpo .btn { background:var(--mi); color:#04121f; border-radius:999px; border:0; font-weight:800; }
+
+  /* ---- Cortina da troca de marca ---- */
+  .cortina { position:fixed; inset:0; z-index:200; pointer-events:none; display:none; }
+  .cortina div { position:absolute; inset:0; }
+  .cortina-logo, .cortina-txt { position:absolute; inset:0; margin:auto; z-index:2; opacity:0; color:#fff; }
+  .cortina-logo { max-width:min(70vw,28rem); max-height:clamp(2.5rem,9vw,6rem); width:auto; height:auto; }
+  .cortina-txt { height:fit-content; width:fit-content; font-family:'Barlow Condensed',sans-serif; font-weight:900; font-style:italic; text-transform:uppercase; letter-spacing:.06em; font-size:clamp(1.8rem,6vw,3.4rem); }
+  .selo { position:fixed; left:1rem; bottom:1rem; z-index:95; background:#000a; color:#fff; font-size:.8rem; padding:.4rem .8rem; border-radius:999px; backdrop-filter:blur(6px); }
+</style>
+</head>
+<body data-tema="home">
+<header id="topo">
+  <span class="txt">Um só endereço</span>
+  <img class="logo" id="logo" alt="PKZ Lab" src="{{LOGO:pkz}}" />
+  <nav aria-label="Trocar de marca">
+    <button data-m="home">Início</button>
+    <button data-m="pkz">PKZ</button>
+    <button data-m="oto">One To One</button>
+    <button data-m="fisio">Fisioterapia</button>
+  </nav>
+</header>
+<main id="app"></main>
+<div class="grao" aria-hidden="true"></div>
+<div class="cortina" id="cortina" aria-hidden="true"><div></div><div></div><img class="cortina-logo" id="cortina-logo" alt="" src="{{LOGO:pkz}}" /><span class="cortina-txt" id="cortina-txt">Um só endereço</span></div>
+<div class="selo">Simulação · Direção 3 Cinemática · role e troque de marca no topo</div>
+
+<script>{{GSAP}}</script>
+<script>{{ST}}</script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const IMG = { pkz:'{{IMG:pkz}}', oto:'{{IMG:oto}}', fisio:'{{IMG:fisio}}', fisio2:'{{IMG:fisio2}}',
+  karate:'{{IMG:karate}}', jiu:'{{IMG:jiu}}', volei:'{{IMG:volei}}', pt:'{{IMG:pt}}', otoFisio:'{{IMG:otoFisio}}', nutri:'{{IMG:nutri}}' };
+const LOGO = { pkz:'{{LOGO:pkz}}', oto:'{{LOGO:oto}}', fisio:'{{LOGO:fisio}}' };
+
+// Textos e números reais do site (data/marcas.js e páginas); nada inventado.
+const MARCAS = {
+  pkz: { nome:'PKZ Lab', titulo:'Treine como um profissional', sub:'Alto rendimento e performance garantida.', cta:'Aula experimental', hero:IMG.pkz,
+    manifesto:'Alto rendimento esportivo para todas as idades e todos os esportes, com metodologia acadêmica, equipe especializada e acompanhamento de perto.',
+    secao:'Modalidades', cards:[ {t:'Karatê',i:IMG.karate}, {t:'Jiu-Jitsu',i:IMG.jiu}, {t:'Vôlei',i:IMG.volei}, {t:'Equipe PKZ',s:'Acompanhamento de perto',i:IMG.pkz}, {t:'E mais: futebol, natação e atletismo',texto:true} ],
+    nums:[ [6,'modalidades esportivas'], [7,'dias de aula por semana'], [16,'horários por dia'] ], ctaTitulo:'Pronto para subir de nível?' },
+  oto: { nome:'Studio One To One', titulo:'Evolua com propósito', sub:'Atendimento individualizado e ambiente sofisticado.', cta:'Aula experimental', hero:IMG.oto,
+    manifesto:'Um estúdio de saúde e bem-estar premium, dedicado ao desenvolvimento físico integral por meio de atendimento estritamente individualizado.',
+    secao:'Soluções exclusivas', cards:[ {t:'Personal Training',s:'Treinamento e força',i:IMG.pt}, {t:'Fisioterapia',s:'Reabilitação e mobilidade',i:IMG.otoFisio}, {t:'Nutricionista',s:'Nutrição e metabolismo',i:IMG.nutri}, {t:'Equipe multidisciplinar',i:IMG.oto} ],
+    nums:[ [3,'serviços integrados'], [7,'dias de atendimento por semana'], [16,'horários por dia'] ], ctaTitulo:'Um treino pensado só para você' },
+  fisio: { nome:'Fisioterapia', titulo:'Movimente-se sem dor', sub:'Reabilitação e prevenção com atendimento individual, na Barra da Tijuca.', cta:'Agendar avaliação', hero:IMG.fisio,
+    manifesto:'Um espaço de reabilitação e movimento com atendimento individual, do primeiro contato até a alta.',
+    secao:'Cuidado para cada fase', cards:[ {t:'Reabilitação ortopédica',s:'Articulações, músculos e tendões',i:IMG.fisio2}, {t:'Pós-operatório',s:'Cada fase da cicatrização',i:IMG.fisio}, {t:'Prevenção de lesões',s:'Treine com mais segurança',i:IMG.fisio2}, {t:'Pilates clínico',s:'Postura e mobilidade',i:IMG.fisio} ],
+    nums:[ [4,'tipos de tratamento'], [4,'etapas do atendimento'], [1,'avaliação individual no início'] ], ctaTitulo:'Movimente-se sem dor' }
+};
+const ENDERECO = 'Av. Armando Lombardi, 949 — Loja G · Barra da Tijuca, Rio de Janeiro — RJ';
+const ORDEM = ['home','pkz','oto','fisio'];
+MARCAS.home = { nome: 'Um só endereço' };
+
+function htmlHome() {
+  const palavras = 'Um só endereço, três especialidades'.split(' ').map(p => `<span class="pal"><span class="pal-i">${p}</span></span>`).join(' ');
+  const manif = 'Treinar, evoluir e se recuperar fazem parte do mesmo caminho. Por isso o treino de alto rendimento, o acompanhamento individual e a fisioterapia ficam juntos, no mesmo endereço.'.split(' ').map(p => `<span class="w">${p}</span>`).join(' ');
+  const faixas = [['pkz', IMG.pkz], ['oto', IMG.oto], ['fisio', IMG.fisio]].map(([id, f]) => `<div class="tri-faixa" data-marca="${id}"><div class="im" style="background-image:url('${f}')"></div></div>`).join('');
+  const cards = [
+    ['pkz', '1 · Treine', 'PKZ Lab', 'Treino esportivo de alto rendimento para todas as idades e todos os esportes.', IMG.pkz, 'Conhecer a PKZ'],
+    ['oto', '2 · Evolua', 'Studio One To One', 'Personal training e nutrição com acompanhamento individual e ambiente sofisticado.', IMG.oto, 'Conhecer a One To One'],
+    ['fisio', '3 · Recupere', 'Fisioterapia', 'Reabilitação, pós-operatório e prevenção de lesões com atendimento individual.', IMG.fisio, 'Conhecer a Fisioterapia'],
+  ].map(([id, passo, nome, texto, foto, cta]) => `<article class="eco-card" data-marca="${id}"><div class="bg" style="background-image:url('${foto}')"></div><div class="eco-corpo"><span class="eco-passo">${passo}</span><img src="${LOGO[id]}" alt="${nome}" /><p>${texto}</p><button class="btn magn" data-m="${id}">${cta} →</button></div></article>`).join('');
+  const nums = [[3, 'especialidades'], [1, 'endereço'], [7, 'dias de aula por semana']].map(([v, r]) => `<div><b class="num" data-v="${v}">${v}</b><span>${r}</span></div>`).join('');
+  return `
+  <section class="hero">
+    <div class="tri">${faixas}</div><div class="hero-aurora"></div><div class="hero-shade"></div>
+    <div><h1 aria-label="Um só endereço, três especialidades">${palavras}</h1><p>Treino de alto rendimento, acompanhamento individual e reabilitação, na Barra da Tijuca.</p><button class="btn magn" id="ir-eco">Escolher por onde começar →</button></div>
+    <div class="cue" aria-hidden="true">Role</div>
+  </section>
+  <section class="manifesto"><div><span class="tag">O ecossistema</span><p>${manif}</p></div></section>
+  <section class="eco" id="eco"><h2>Escolha por onde começar</h2><p>Você pode começar por qualquer uma. As três ficam no mesmo endereço.</p><div class="eco-grid">${cards}</div></section>
+  <section class="numeros">${nums}</section>
+  <footer><div><h3>Nosso endereço</h3><p>${ENDERECO}</p></div><div><h3>Ir para</h3><button data-m="pkz">PKZ Lab →</button><button data-m="oto">Studio One To One →</button><button data-m="fisio">Fisioterapia →</button></div><div><h3>Simulação</h3><p>Protótipo de ideia. Textos e números vêm do site atual; fotos e logos também.</p></div></footer>`;
+}
+
+const app = document.getElementById('app');
+let ctx, atual = null;
+
+function html(id) {
+  if (id === 'home') return htmlHome();
+  const m = MARCAS[id];
+  const palavras = m.titulo.split(' ').map(p => `<span class="pal"><span class="pal-i">${p}</span></span>`).join(' ');
+  const manif = m.manifesto.split(' ').map(p => `<span class="w">${p}</span>`).join(' ');
+  const cards = m.cards.map(c => c.texto
+    ? `<div class="card texto"><span>${c.t}</span></div>`
+    : `<div class="card"><div class="bg" style="background-image:url('${c.i}')"></div><span>${c.t}${c.s ? `<small>${c.s}</small>` : ''}</span></div>`).join('');
+  const nums = m.nums.map(([v, r]) => `<div><b class="num" data-v="${v}">${v}</b><span>${r}</span></div>`).join('');
+  const outros = ORDEM.filter(o => o !== id).map(o => `<button data-m="${o}">${MARCAS[o].nome} →</button>`).join('');
+  return `
+  <section class="hero">
+    <div class="hero-img" style="background-image:url('${m.hero}')"></div><div class="hero-aurora"></div><div class="hero-shade"></div>
+    <div><h1 aria-label="${m.titulo}">${palavras}</h1><p>${m.sub}</p><a class="btn magn" href="#">${m.cta} →</a></div>
+    <div class="cue" aria-hidden="true">Role</div>
+  </section>
+  <section class="manifesto"><div><span class="tag">${m.nome}</span><p>${manif}</p></div></section>
+  <section class="h-sec"><h2>${m.secao}</h2><div class="h-track">${cards}</div></section>
+  <section class="numeros">${nums}</section>
+  <section class="cta"><div class="aurora2"></div><div><h2>${m.ctaTitulo}</h2><a class="btn magn" href="#">${m.cta} →</a></div></section>
+  <footer><div><img src="${LOGO[id]}" alt="${m.nome}" /><p>${ENDERECO}</p></div><div><h3>Conheça também</h3>${outros}</div><div><h3>Simulação</h3><p>Protótipo de ideia. Textos e números vêm do site atual; fotos e logos também.</p></div></footer>`;
+}
+
+function animar() {
+  const ent = gsap.timeline({ delay: .15, defaults: { ease: 'power3.out' } });
+  ent.from('.pal-i', { yPercent: 115, duration: 1.1, ease: 'power4.out', stagger: .09 })
+     .from('.hero p, .hero .btn', { y: 30, opacity: 0, duration: .9, stagger: .12 }, '-=.6');
+  gsap.to('.hero-img, .tri-faixa .im', { yPercent: 10, scale: 1.12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  if (atual === 'home') gsap.from('.tri-faixa', { opacity: 0, yPercent: 6, duration: 1.1, stagger: .14, ease: 'power3.out' });
+  gsap.to('.hero > div:nth-child(4)', { y: -60, opacity: .1, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+  // manifesto: a tela fica parada e as palavras acendem uma a uma
+  gsap.to('.manifesto .w', { opacity: 1, stagger: .12, ease: 'none',
+    scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '+=140%', scrub: true, pin: true } });
+
+  // cards: a página rola de lado enquanto você rola para baixo
+  const trilho = document.querySelector('.h-track');
+  if (trilho) gsap.to(trilho, { x: () => -(trilho.scrollWidth - innerWidth), ease: 'none',
+    scrollTrigger: { trigger: '.h-sec', start: 'top top', end: () => '+=' + (trilho.scrollWidth - innerWidth), scrub: .6, pin: true, invalidateOnRefresh: true } });
+
+  gsap.utils.toArray('.num').forEach(el => {
+    const alvo = +el.dataset.v, o = { n: 0 }; el.textContent = '0';
+    gsap.to(o, { n: alvo, duration: 1.6, ease: 'power2.out', onUpdate: () => el.textContent = Math.round(o.n), scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+  });
+  if (document.querySelector('.eco')) {
+    gsap.from('.eco-card', { y: 80, opacity: 0, duration: 1, ease: 'power3.out', stagger: .15, scrollTrigger: { trigger: '.eco-grid', start: 'top 78%' } });
+    document.getElementById('ir-eco').onclick = () => document.getElementById('eco').scrollIntoView({ behavior: 'smooth' });
+  }
+  if (document.querySelector('.cta')) gsap.from('.cta h2, .cta .btn', { y: 60, opacity: 0, stagger: .12, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.cta', start: 'top 70%' } });
+  if (document.querySelector('.aurora2')) gsap.to('.aurora2', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'bottom top', scrub: true } });
+}
+
+function montar(id) {
+  if (ctx) ctx.revert();
+  atual = id;
+  document.body.dataset.tema = id;
+  if (LOGO[id]) { document.getElementById('logo').src = LOGO[id]; document.getElementById('logo').alt = MARCAS[id].nome; }
+  document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-current', String(b.dataset.m === id)));
+  document.title = MARCAS[id].nome + ' · simulação cinemática';
+  app.innerHTML = html(id);
+  window.scrollTo(0, 0);
+  ctx = gsap.context(animar, app);
+  ScrollTrigger.refresh();
+  history.replaceState(null, '', '#' + id);
+}
+
+// Troca de marca com cortina: cobre, troca o conteúdo, descobre
+const cortina = document.getElementById('cortina');
+// Cores da cortina e logo de cada destino (os mesmos da cortina do site)
+const CORTINA = { home: ['#020b18', '#00bbff'], pkz: ['#020b18', '#0a2d6e'], oto: ['#014c6f', '#00bbff'], fisio: ['#0f5f58', '#2dd4bf'] };
+function trocar(id) {
+  if (id === atual || trocar.ocupado) return;
+  trocar.ocupado = true;
+  const [a, b] = cortina.querySelectorAll('div');
+  const logo = document.getElementById('cortina-logo'), txt = document.getElementById('cortina-txt');
+  const alvo = id === 'home' ? txt : logo;
+  [a.style.background, b.style.background] = [CORTINA[id][1], CORTINA[id][0]];
+  if (id !== 'home') { logo.src = LOGO[id]; logo.alt = ''; }
+  // cobre, o logo da marca entra, a página troca por baixo, o logo sai e os painéis sobem
+  gsap.timeline({ onComplete: () => { cortina.style.display = 'none'; trocar.ocupado = false; } })
+    .set(cortina, { display: 'block' }).set([a, b], { yPercent: 100 }).set([logo, txt], { opacity: 0, y: 24 })
+    .to(a, { yPercent: 0, duration: .55, ease: 'power4.inOut' })
+    .to(b, { yPercent: 0, duration: .55, ease: 'power4.inOut' }, '-=.4')
+    .to(alvo, { opacity: 1, y: 0, duration: .35, ease: 'power3.out' })
+    .add(() => montar(id), '+=.2')
+    .to(alvo, { opacity: 0, y: -16, duration: .25, ease: 'power2.in' })
+    .to(a, { yPercent: -100, duration: .7, ease: 'power4.inOut' }, '+=.05')
+    .to(b, { yPercent: -100, duration: .7, ease: 'power4.inOut' }, '-=.55');
+}
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) trocar(b.dataset.m); if (e.target.closest('a[href="#"]')) e.preventDefault(); });
+document.addEventListener('pointermove', e => {
+  const b = e.target.closest && e.target.closest('.magn'); if (!b) return;
+  const r = b.getBoundingClientRect();
+  gsap.to(b, { x: (e.clientX - (r.left + r.width / 2)) * .3, y: (e.clientY - (r.top + r.height / 2)) * .4, duration: .3, overwrite: 'auto' });
+});
+document.addEventListener('pointerout', e => { const b = e.target.closest && e.target.closest('.magn'); if (b && !b.contains(e.relatedTarget)) gsap.to(b, { x: 0, y: 0, duration: .7, ease: 'elastic.out(1,.45)', overwrite: 'auto' }); });
+addEventListener('scroll', () => document.getElementById('topo').classList.toggle('sólido', scrollY > 40), { passive: true });
+
+addEventListener('hashchange', () => { const h = location.hash.slice(1); if (ORDEM.includes(h)) trocar(h); });
+
+montar(ORDEM.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home');
+</script>
+</body>
+</html>

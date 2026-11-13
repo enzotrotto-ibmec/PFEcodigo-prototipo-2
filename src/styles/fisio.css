@@ -1,0 +1,373 @@
+/*
+  Fisioterapia (marca independente) — tema claro verde-água. PALETA PROVISÓRIA: trocar os tokens quando a marca definir as cores.
+  Base: cópia do tema da One To One (mesma estrutura de tokens). Carregar DEPOIS de base.css e ANTES de cta.css.
+*/
+
+:root {
+  /* ---------- Superfícies ---------- */
+  --bg-base: #ffffff; /* fundo da página */
+  --bg-surface: #d6f5ee; /* cards, tags, rodapé */
+  --bg-header: rgba(255, 255, 255, 0.95); /* header sticky (translúcido, com blur) */
+  --bg-nav-panel: var(--bg-base); /* painel do menu mobile */
+  --bg-modal: var(--bg-base); /* caixa do modal */
+  --bg-input: rgba(214, 245, 238, 0.15); /* campos do formulário */
+  --slot-bg: var(--bg-base); /* botão de horário (repouso) */
+
+  /* ---------- Acento ---------- */
+  --accent: #0f5f58; /* azul petróleo: marca, botão primário, voltar ao topo */
+  --accent-strong: var(--accent); /* preenchimento de ação primária (botões, chip ativo) */
+  --accent-light: #2dd4bf; /* ciano: hover/pressionado (cta.css lê este nome) */
+  --accent-ink: var(--accent); /* cor de texto/ícone/borda de destaque */
+  --shader-a: #d6f5ee; /* paleta clara do fundo do hero (shader) */
+  --shader-b: #2dd4bf;
+  --shader-mix: 0.5; /* suave: o texto verde-escuro precisa de contraste AA sobre o shader */
+  --on-accent: #ffffff; /* texto sobre --accent */
+
+  /* ---------- Texto ---------- */
+  --text-primary: #000000; /* títulos e texto principal */
+  --text-muted: #0f5f58; /* texto de apoio (azul petróleo) */
+  --text-subtle: #5a6a7f; /* links secundários, botão fechar */
+  --text-lead: var(--text-primary); /* parágrafo de abertura da seção "Sobre" */
+  --text-footnote: #475569; /* linha de direitos no rodapé */
+
+  /* ---------- Bordas, estados e foco ---------- */
+  --border: rgba(15, 95, 88, 0.2); /* divisórias e contorno de card */
+  --border-strong: rgba(15, 95, 88, 0.6); /* chip de dia */
+  --border-slot: rgba(15, 95, 88, 0.6); /* botão de horário */
+  --border-input: rgba(15, 95, 88, 0.65); /* campo de formulário */
+  --danger: #b91c1c; /* erro de validação */
+  --focus: var(--accent-ink); /* anel de foco (outline) */
+
+  /* ---------- Pílulas (tags, badge, link destacado) ---------- */
+  --pill-bg: var(--bg-surface);
+  --pill-border: none;
+  --pill-fg: var(--accent-ink);
+  --pill-hover-bg: var(--accent);
+  --pill-hover-fg: #ffffff;
+  --icon-bg: #ffffff; /* quadrado do ícone em "destaques" */
+  --social-icon-bg: rgba(45, 212, 191, 0.15); /* ícone do Instagram no rodapé */
+  --social-fg: var(--accent); /* texto do botão de rede social */
+
+  /* ---------- Hover e pressionado (chip de dia, horário, menu) ---------- */
+  --hover-bg: var(--bg-surface);
+  --hover-border: var(--accent);
+  --hover-fg: var(--text-primary);
+  --press-bg: var(--accent-light); /* horário em :active */
+  --press-fg: var(--text-primary);
+  --hover-tint: rgba(45, 212, 191, 0.12); /* fundo do botão hambúrguer em hover */
+
+  /* ---------- Botões ---------- */
+  --btn-padding: 0.8125rem 1.75rem;
+  --btn-border: none;
+  --btn-hover-bg: var(--accent-light);
+  --btn-hover-fg: #000000;
+  --radius-btn: 24px; /* botões da página (.btn) */
+  --radius-btn-modal: 24px; /* botão do modal */
+
+  /* ---------- Tipografia ---------- */
+  --font-display: "Plus Jakarta Sans", "Inter", sans-serif; /* títulos e logotipo */
+  --font-body: "Inter", "Plus Jakarta Sans", sans-serif;
+  --heading-weight: 700;
+  --heading-tracking: normal;
+  --nav-weight: 600; /* links do menu */
+  --nav-size: 1rem;
+  --nav-hover: var(--accent);
+  --nav-hover-decoration: underline;
+  --nav-transition:
+    color 0.2s,
+    background-color 0.2s;
+
+  /* ---------- Sombras ---------- */
+  --shadow-hero: 0 16px 36px rgba(15, 95, 88, 0.1); /* foto do hero */
+  --shadow-nav: 0 16px 36px rgba(15, 95, 88, 0.15); /* painel do menu mobile */
+  --fab-shadow: none; /* botão voltar ao topo (sem sombra nesta marca) */
+  --fab-offset: 0px; /* deslocamento do botão enquanto escondido */
+
+  /* ---------- Overlays ---------- */
+  --overlay: rgba(15, 95, 88, 0.45); /* ::backdrop do modal <dialog> */
+}
+
+/* ---------- Hero ---------- */
+.hero-content h1 {
+  font-weight: 800;
+  font-size: clamp(2.1rem, 9vw, 2.8rem);
+  line-height: 1.15;
+  color: var(--accent);
+  margin-bottom: 0.875rem;
+}
+.hero-content p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+.hero-actions {
+  display: flex;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- Botões: fonte, transição e elevação no hover ---------- */
+.btn {
+  font-size: var(--fs-base);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  transition:
+    background-color 0.2s,
+    transform 0.15s;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+.btn-modal {
+  font-family: var(--font-display);
+  transition: background-color 0.2s;
+}
+.btn-modal:hover {
+  background-color: var(--btn-hover-bg);
+  color: var(--btn-hover-fg); /* texto branco no ciano ficava com contraste 2,2:1; preto passa de 9:1 */
+}
+
+/* ---------- Serviços ---------- */
+.services-section {
+  background-color: rgba(214, 245, 238, 0.2);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  max-width: var(--wrap);
+  margin-left: auto;
+  margin-right: auto;
+}
+.service-card {
+  background-color: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(15, 95, 88, 0.05);
+}
+.service-img-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+}
+.service-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.service-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.service-tag {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pill-fg);
+  background: var(--pill-bg);
+  padding: 0.25rem 0.625rem;
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+  align-self: flex-start;
+}
+
+/* ---------- Mapa ---------- */
+.map-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  width: 100%;
+}
+
+/* ---------- Conheça também: título na cor da marca ---------- */
+.cross-brand-text h3 {
+  color: var(--accent);
+}
+
+/* ---------- Logotipo: maior que o padrão de base.css para o "STUDIO" do logo ficar legível ---------- */
+.brand-logo {
+  height: 2.75rem;
+}
+.footer-logo {
+  height: 3.25rem;
+}
+
+/* ---------- Responsivo (marca), mobile first: o CSS acima é o celular ---------- */
+@media (min-width: 40.0625em) {
+  .hero-content h1 {
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    margin-bottom: 1.25rem;
+  }
+  .hero-content p {
+    font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+    margin-bottom: 2rem;
+  }
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(16.25rem, 100%), 1fr));
+    gap: 1.75rem;
+  }
+  .service-body {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 48.0625em) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(18.125rem, 100%), 1fr));
+  }
+}
+
+/* ---------- Desktop largo (>= 1101px): hierarquia e composição ---------- */
+@media (min-width: 68.8125em) {
+  .brand-logo {
+    height: 3.5rem;
+  }
+  .footer-logo {
+    height: 3.75rem;
+  }
+  /* logo horizontal: mais largura para ficar à altura do título.
+     Seletor com .faq para vencer o .faq-logo de extras.css, que carrega depois deste arquivo. */
+  .faq .faq-logo {
+    width: min(100%, 22rem);
+  }
+  .hero-content h1 {
+    font-size: var(--fs-hero);
+    line-height: 1.1;
+  }
+  .hero-content p {
+    font-size: var(--fs-lg);
+    max-width: 40ch;
+  }
+  .services-section {
+    padding-inline: clamp(1.5rem, 4%, 4rem);
+    border-radius: 1.25rem;
+  }
+  .card-grid {
+    max-width: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.5%, 3rem);
+  }
+  .service-body {
+    padding: 1.75rem;
+  }
+}
+
+/* ---------- Fisioterapia: tratamentos e etapas ---------- */
+.fisio-section {
+  background-color: rgba(214, 245, 238, 0.35);
+}
+.fisio-subtitle {
+  max-width: 60ch;
+  margin-inline: auto;
+  color: var(--text-muted);
+}
+.fisio-card {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(15, 95, 88, 0.06);
+}
+.fisio-card h3 {
+  margin: 0.25rem 0 0.5rem;
+}
+.fisio-icone {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+.fisio-etapas {
+  display: grid;
+  gap: 2rem;
+  max-width: var(--wrap);
+  margin: 3rem auto 0;
+  text-align: left;
+  align-items: center;
+}
+.fisio-etapas h3 {
+  margin-bottom: 1.25rem;
+}
+.fisio-lista-wrap {
+  position: relative;
+}
+.fisio-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+.fisio-lista li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.fisio-num {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+/* trilho (cinza) e preenchimento (animado com scroll pelo GSAP; sem JS fica cheio) */
+.fisio-linha {
+  position: absolute;
+  left: 1.1875rem;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  width: 2px;
+  background: var(--border);
+}
+.fisio-linha-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-light);
+}
+.fisio-etapas-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: var(--shadow-hero);
+  display: block;
+}
+@media (min-width: 53.75em) {
+  .fisio-etapas {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+@media (min-width: 68.8125em) {
+  .fisio-section {
+    padding-inline: clamp(1.5rem, 4%, 4rem);
+    border-radius: 1.25rem;
+  }
+  .card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

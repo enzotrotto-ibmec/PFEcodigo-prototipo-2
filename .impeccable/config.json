@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-11T21:38:43.652Z",
+        "reason": "user confirmed: o Bernardo pediu para manter as fontes atuais do site (Montserrat na PKZ, Plus Jakarta Sans e Inter na One To One); o protótipo ideias/modelo.html só replica a identidade existente"
+      },
+      {
+        "rule": "overused-font",
+        "value": "montserrat",
+        "createdAt": "2026-11-11T21:38:44.077Z",
+        "reason": "user confirmed: o Bernardo pediu para manter as fontes atuais do site (Montserrat na PKZ, Plus Jakarta Sans e Inter na One To One); o protótipo ideias/modelo.html só replica a identidade existente"
+      },
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-11-11T21:38:44.530Z",
+        "reason": "user confirmed: o Bernardo pediu para manter as fontes atuais do site (Montserrat na PKZ, Plus Jakarta Sans e Inter na One To One); o protótipo ideias/modelo.html só replica a identidade existente"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "ideias/cinematica-modelo.html"
+        ],
+        "createdAt": "2026-11-11T22:19:45.614Z",
+        "reason": "confident false positive: conferido em captura de tela, as fotos aparecem; o degradê só escurece a base do hero e dos cartões para o texto ter contraste (estimado em 45% a 20% de opacidade no meio e no topo)"
+      }
+    ]
+  }
+}

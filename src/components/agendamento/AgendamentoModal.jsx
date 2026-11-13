@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LinkInterno from "../LinkInterno.jsx";
 import { abrirComoModal } from "../../utils/dialogo.js";
-import { cpfValido, linkWhatsapp, mascararCpf, mascararTelefone } from "../../utils/agendamento.js";
+import { cpfValido, linkWhatsapp, mascararCpf, mascararTelefone, ocultarCpf } from "../../utils/agendamento.js";
 
 // Formulário vazio (também usado para limpar depois do envio)
 const FORMULARIO_VAZIO = {
@@ -67,7 +67,7 @@ export default function AgendamentoModal({ marca, horario, onFechar }) {
       `Modalidade: ${campos.modalidade}`,
       `Nome: ${campos.nome.trim()}`,
       `Telefone: ${campos.telefone}`,
-      `CPF: ${campos.cpf}`,
+      `CPF: ${ocultarCpf(campos.cpf)}`,
       campos.observacao.trim() && `Observação: ${campos.observacao.trim()}`,
     ]
       .filter(Boolean)

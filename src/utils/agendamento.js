@@ -18,6 +18,13 @@ export function cpfValido(digitos) {
   return true;
 }
 
+// CPF para a mensagem do WhatsApp: só os 2 últimos dígitos aparecem (***.***.***-12).
+// A mensagem vai na URL do wa.me, que fica no histórico do navegador; o CPF completo não deve ir junto.
+export function ocultarCpf(valor) {
+  const digitos = String(valor).replace(/\D/g, "");
+  return digitos.length === 11 ? `***.***.***-${digitos.slice(-2)}` : "***.***.***-**";
+}
+
 // Máscara do CPF: 000.000.000-00
 export function mascararCpf(valor) {
   return valor

@@ -13,6 +13,7 @@ com menu hambúrguer. O que muda é a forma de construir: o site virou uma SPA (
 * React 19 (componentes, props e `useState`)
 * React Router (`BrowserRouter`, `Routes`, `Route` e `Link`)
 * Vite (servidor de desenvolvimento e build)
+* GSAP + ScrollTrigger (animações presas à rolagem) e um shader WebGL no fundo do hero
 * CSS3 (as mesmas folhas de estilo do Vanilla)
 
 ## Requisitos da AP2 (e-mail do professor) e onde estão
@@ -25,18 +26,19 @@ com menu hambúrguer. O que muda é a forma de construir: o site virou uma SPA (
 | `useState` | Menu hambúrguer, janelas de contato e agendamento, formulário, mapa, halter do portal |
 | Navegação com `BrowserRouter` | `src/main.jsx` (BrowserRouter) e `src/App.jsx` (Routes/Route) |
 | Sem `<a>` para navegação interna | Toda troca de página usa `<Link>` (via `LinkInterno`); `<a>` só para links externos (WhatsApp, Instagram, Google Maps) e para o atalho de acessibilidade "Pular para o conteúdo" (`href="#main"`, que não troca de página) |
-| Sem `useEffect` (só na próxima aula) | Nenhum componente usa `useEffect` |
+| Sem `useEffect` (só na próxima aula) | Os componentes de dados e de página não usam. **Exceção assumida pelo grupo:** os efeitos visuais (`utils/animacoes.js`, `components/efeitos/FundoShader.jsx` e `components/TransicaoPagina.jsx`) usam `useLayoutEffect`/`useEffect`, porque GSAP e WebGL precisam do DOM já montado |
 
 ## Rotas
 
 | Vanilla | React (rota) | Componente |
 | --- | --- | --- |
-| `index.html` | `/` | `pages/Portal.jsx` |
+| `index.html` | `/` | `pages/Home.jsx` (ecossistema: CTAs para PKZ, One To One e Fisioterapia; substituiu o portal do halter, que foi removido e continua no histórico do Git) |
 | `pages/pkz.html` | `/pkz` | `pages/PaginaPkz.jsx` |
 | `pages/pkz-aula-experimental.html` | `/pkz/aula-experimental` | `pages/AulaExperimental.jsx` (`marca="pkz"`) |
 | `pages/one-to-one.html` | `/one-to-one` | `pages/PaginaOneToOne.jsx` |
 | `pages/one-to-one-aula-experimental.html` | `/one-to-one/aula-experimental` | `pages/AulaExperimental.jsx` (`marca="oto"`) |
 | `pages/privacidade.html` | `/privacidade` | `pages/Privacidade.jsx` |
+| (novo) | `/fisioterapia` | `pages/PaginaFisio.jsx` (marca independente, sem aula experimental) |
 | `404.html` | qualquer outra (`*`) | `pages/NaoEncontrada.jsx` |
 
 ## Estrutura
@@ -165,3 +167,34 @@ Isso, no React, pede `useEffect`, que ainda não foi dado. Por enquanto:
 - **Professor:** Thiago Marcondes Santos
 - **Instituição:** IBMEC
 - **Semestre:** 2026.2
+
+## Testes
+
+```bash
+npm test
+```
+
+Roda `src/data/seo.test.js` (Node, sem dependências): confere o `<head>` gerado por rota (canonical, `noindex` da 404, JSON-LD, tamanho das descrições).
+
+## Imagens
+
+As fotos em `public/assets/img/` existem em quatro larguras (480, 800, 1280 e 1920 px; `srcsetDe` em `src/utils/asset.js` monta o `srcset`). As de `img/portal/` só servem de imagem de compartilhamento (og:image) e existem só em 1280 px.
+
+## SEO, segurança e publicação
+
+No `npm run build` o `vite.config.js` gera um `index.html` por rota (`dist/pkz/`, `dist/fisioterapia/`...) com título, descrição, Open Graph e dados estruturados da página (fonte única: `src/data/seo.js`), mais `robots.txt`, `404.html` (noindex) e a política de conteúdo (CSP) em `<meta>`.
+
+Para gerar também `sitemap.xml`, canonical e `og:image` (precisam do endereço público), defina o endereço antes do build:
+
+```bash
+VITE_SITE_URL=https://usuario.github.io npm run build
+```
+
+Sem a variável o build funciona, só omite essas quatro peças.
+
+### Segurança: o que está feito e o que a hospedagem não permite
+- Sem segredos no código, sem `innerHTML`/`dangerouslySetInnerHTML`, `npm audit` sem vulnerabilidades, links externos com `rel="noopener noreferrer"`.
+- **Agendamento:** a mensagem do WhatsApp (que vai na URL do `wa.me` e fica no histórico do navegador) mostra o CPF mascarado (`***.***.***-12`). O formulário continua validando o CPF completo. O telefone segue na mensagem.
+- **CSP e `Referrer-Policy` por `<meta>`** (só no build). O GitHub Pages não deixa configurar cabeçalhos HTTP, então `X-Content-Type-Options`, `Strict-Transport-Security` e `frame-ancestors` não dá para aplicar aqui; HTTPS o próprio GitHub Pages já força.
+- **Terceiros que carregam:** Google Fonts (CSS e arquivos de fonte) e, só ao clicar em "Ver mapa", o mapa do Google. O CSS do Google Fonts não aceita SRI. Para eliminar esse terceiro, o caminho é hospedar as fontes no próprio site (pacotes `@fontsource`).
+

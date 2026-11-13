@@ -1,0 +1,485 @@
+/* Página inicial (ecossistema). Vem DEPOIS do portal.css: reaproveita os tokens e o rodapé dele,
+   desliga a barra fixa do halter e define o resto. Cores e fontes são as das três marcas. */
+:root {
+  --home-pad: clamp(1.2rem, 5vw, 4rem);
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  padding-top: 0;
+  background: var(--bg-base);
+  color: #ffffff;
+  font-family: var(--font-body);
+}
+
+/* Cada marca com as suas cores e a sua fonte (iguais às páginas dela) */
+[data-marca="pkz"] {
+  --mc: #004099;
+  --mi: #93c5fd;
+  --mf: "Montserrat", sans-serif;
+  --mp: 900;
+  --ms: italic;
+}
+[data-marca="oto"] {
+  --mc: #014c6f;
+  --mi: #00bbff;
+  --mf: "Plus Jakarta Sans", sans-serif;
+  --mp: 800;
+  --ms: normal;
+}
+[data-marca="fisio"] {
+  --mc: #0f5f58;
+  --mi: #2dd4bf;
+  --mf: "Plus Jakarta Sans", sans-serif;
+  --mp: 800;
+  --ms: normal;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 300;
+  background: #ffffff;
+  color: #020b18;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 400;
+  background: linear-gradient(90deg, #93c5fd, #00bbff, #2dd4bf);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* ---------- Cabeçalho ---------- */
+.home-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 200;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  padding: 0.9rem var(--home-pad);
+  transition: background-color 0.35s ease, backdrop-filter 0.35s ease;
+}
+.home-header.is-scrolled {
+  background: rgba(2, 11, 24, 0.88);
+  backdrop-filter: blur(10px);
+}
+.home-marca {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-right: auto;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-decoration: none;
+}
+.home-nav {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+.home-nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px solid color-mix(in srgb, var(--c) 70%, transparent);
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+@media (max-width: 47.99em) {
+  .home-nav-link {
+    padding: 0 0.7rem;
+    letter-spacing: 0.04em;
+  }
+  .home-nav {
+    gap: 0.3rem;
+  }
+}
+.n-pkz {
+  --c: #93c5fd;
+}
+.n-oto {
+  --c: #00bbff;
+}
+.n-fisio {
+  --c: #2dd4bf;
+}
+.home-nav-link:hover {
+  background: var(--c);
+  color: #04121f;
+}
+.home-nav-link:focus-visible,
+.home-marca:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* ---------- Hero: as três equipes lado a lado ---------- */
+.home-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  padding: 8rem var(--home-pad) clamp(2.5rem, 8vh, 5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.tri {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+}
+@media (min-width: 48em) {
+  .tri {
+    grid-template-rows: none;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.tri-faixa {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+.tri-faixa:first-child {
+  border-top: 0;
+}
+@media (min-width: 48em) {
+  .tri-faixa {
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .tri-faixa:first-child {
+    border-left: 0;
+  }
+}
+.tri-faixa img {
+  position: absolute;
+  inset: -4% 0;
+  width: 100%;
+  height: 108%;
+  object-fit: cover;
+}
+.tri-faixa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--mc) 60%, transparent), transparent 65%);
+}
+.tri-nome {
+  display: none; /* no celular as faixas são empilhadas e o título cobriria o nome; os nomes estão nos cartões */
+  position: absolute;
+  z-index: 2;
+  left: 1rem;
+  bottom: 0.7rem;
+  font-family: var(--mf);
+  font-weight: var(--mp);
+  font-style: var(--ms);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+@media (min-width: 48em) {
+  .tri-nome {
+    display: block;
+    top: 6rem;
+    bottom: auto;
+  }
+}
+.aurora {
+  position: absolute;
+  inset: -10%;
+  z-index: -2;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(55% 50% at 20% 30%, #1e40af, transparent 70%),
+    radial-gradient(45% 55% at 50% 80%, #2dd4bf, transparent 70%),
+    radial-gradient(50% 60% at 85% 30%, #00bbff, transparent 70%);
+  animation: flutua 14s ease-in-out infinite alternate;
+}
+@keyframes flutua {
+  to {
+    transform: translate3d(4%, -5%, 0) scale(1.12);
+  }
+}
+.sombra {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(2, 11, 24, 0.95) 6%, rgba(2, 11, 24, 0.55) 50%, rgba(2, 11, 24, 0.75));
+}
+.hero-texto h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2.8rem, 9vw, 8.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+.pal {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.06em 0.12em 0;
+  margin-bottom: -0.12em;
+}
+.pal-i {
+  display: inline-block;
+}
+.hero-texto p {
+  margin: 1.2rem 0 1.8rem;
+  max-width: 36ch;
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  color: #e2e8f0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  will-change: transform;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-home {
+  background: #ffffff;
+  color: #020b18;
+}
+.btn-home:hover {
+  background: #93c5fd;
+}
+.btn-eco {
+  background: var(--mi);
+  color: #04121f;
+}
+.btn-eco:hover {
+  background: #ffffff;
+}
+
+/* ---------- Manifesto: as palavras acendem com a rolagem ---------- */
+.manif {
+  display: grid;
+  place-items: center;
+  min-height: 100svh; /* ocupa a tela inteira: é a seção que fica travada enquanto as palavras acendem */
+  padding: clamp(5rem, 12vh, 8rem) var(--home-pad);
+  background: var(--bg-base);
+}
+.manif p {
+  max-width: 28ch;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 4.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+}
+
+/* ---------- Ecossistema: três cartões ligados por um fio ---------- */
+.eco {
+  padding: clamp(3rem, 8vh, 6rem) var(--home-pad) clamp(4rem, 10vh, 7rem);
+  background: linear-gradient(180deg, var(--bg-base), #051a30 60%, var(--bg-deep));
+}
+.eco h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  line-height: 1;
+}
+.eco-sub {
+  margin: 0.8rem 0 2.5rem;
+  max-width: 44ch;
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
+.eco-grid {
+  position: relative;
+  display: grid;
+  gap: 1.2rem;
+}
+@media (min-width: 60em) {
+  .eco-grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding-top: 2.5rem;
+  }
+}
+.fio {
+  display: none;
+}
+@media (min-width: 60em) {
+  .fio {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0.9rem;
+    height: 1rem;
+    grid-column: 1 / -1;
+  }
+  .fio-linha {
+    position: absolute;
+    left: 16.6%;
+    right: 16.6%;
+    top: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, #93c5fd, #00bbff, #2dd4bf);
+    transform-origin: left;
+  }
+  .fio-no {
+    position: absolute;
+    top: 50%;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+  }
+}
+.eco-card {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(26rem, 62vh, 36rem);
+  border-radius: 22px;
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  transform-style: preserve-3d;
+  isolation: isolate;
+}
+.eco-foto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.eco-card:hover .eco-foto {
+  transform: scale(1.06);
+}
+.eco-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--mc) 94%, #000) 14%, color-mix(in srgb, var(--mc) 78%, transparent) 58%, color-mix(in srgb, var(--mc) 20%, transparent));
+}
+.eco-corpo {
+  padding: 1.6rem;
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+.eco-passo {
+  font-family: var(--mf);
+  font-weight: var(--mp);
+  font-style: var(--ms);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mi);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.eco-corpo h3 {
+  margin: 0;
+}
+.eco-corpo h3 img {
+  height: 2.6rem;
+  width: auto;
+}
+.eco-corpo p {
+  max-width: 30ch;
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  color: #f1f5f9;
+}
+
+/* ---------- Números ---------- */
+.home-numeros {
+  padding: clamp(3rem, 8vh, 6rem) var(--home-pad);
+  background: var(--bg-deep);
+}
+.home-numeros ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 2rem;
+  max-width: var(--wrap-landing);
+  margin: 0 auto;
+}
+.home-numeros strong {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(4rem, 12vw, 9rem);
+  line-height: 0.9;
+  color: var(--accent-light);
+  font-variant-numeric: tabular-nums;
+}
+.home-numeros li > span {
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+}
+
+/* ---------- Endereço ---------- */
+.home-local {
+  padding: clamp(3rem, 8vh, 6rem) var(--home-pad);
+  background: var(--bg-base);
+  display: grid;
+  gap: 1.2rem;
+  justify-items: start;
+}
+.home-local h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+.home-local p {
+  font-size: var(--fs-md);
+  color: var(--text-muted);
+  line-height: 1.5;
+}

@@ -17,7 +17,11 @@ export function rolarParaSecao(id) {
   function tentar() {
     const secao = document.getElementById(id);
     if (secao) {
-      secao.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Seção que trava a tela e acende o texto com a rolagem (animacoes.js): vai até o FIM da trava,
+      // senão a pessoa chegaria num texto ainda apagado. Sem trava, rola até o topo da seção.
+      const fimDaTrava = Number(secao.dataset.fimPin);
+      if (Number.isFinite(fimDaTrava) && fimDaTrava > 0) window.scrollTo({ top: fimDaTrava, behavior: "smooth" });
+      else secao.scrollIntoView({ behavior: "smooth", block: "start" });
     } else if (tentativas < 60) {
       tentativas++;
       requestAnimationFrame(tentar);

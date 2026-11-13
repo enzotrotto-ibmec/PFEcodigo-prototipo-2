@@ -45,6 +45,12 @@
     #014c6f;
 }
 
+[data-brand="fisio"] {
+  --cta-band-bg:
+    radial-gradient(circle at 100% 0, rgba(45, 212, 191, 0.35), transparent 55%),
+    #0f5f58;
+}
+
 /* ---------- Botões ---------- */
 .cta-btn {
   gap: 0.625rem;
@@ -228,5 +234,21 @@ html {
   }
   html {
     scroll-padding-bottom: auto;
+  }
+}
+/* Celular deitado (altura até 480px): a barra fixa mais o cabeçalho ocupavam cerca de 1/3 da tela.
+   Os botões continuam no hero e na faixa de CTA da página. */
+@media (max-height: 30em) and (orientation: landscape) {
+  .mobile-cta {
+    display: none;
+  }
+  body {
+    padding-bottom: 0;
+  }
+  body .floating-actions {
+    bottom: 1rem;
+  }
+  html {
+    scroll-padding-bottom: 0;
   }
 }

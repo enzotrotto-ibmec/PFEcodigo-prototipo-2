@@ -1,3 +1,4 @@
+import FaixaNumeros from "../components/marca/FaixaNumeros.jsx";
 import LayoutMarca from "../components/marca/LayoutMarca.jsx";
 import Hero from "../components/marca/Hero.jsx";
 import Sobre from "../components/marca/Sobre.jsx";
@@ -9,6 +10,7 @@ import SecaoFamilia from "../components/pkz/SecaoFamilia.jsx";
 import SecaoEsportes from "../components/pkz/SecaoEsportes.jsx";
 import LinkInterno from "../components/LinkInterno.jsx";
 import { MARCAS } from "../data/marcas.js";
+import { ROTAS } from "../data/seo.js";
 
 // Página inicial da PKZ Lab (rota /pkz). Era o pages/pkz.html do vanilla.
 // A página só monta as seções: cada uma é um componente que recebe os dados por props.
@@ -65,7 +67,7 @@ const PERGUNTAS = [
 
 export default function PaginaPkz() {
   return (
-    <LayoutMarca marcaId="pkz" titulo="PKZ Lab | Treino esportivo de alto rendimento na Barra da Tijuca" paginaInicial>
+    <LayoutMarca marcaId="pkz" titulo={ROTAS["/pkz"].titulo} paginaInicial>
       <Hero
         titulo="Treine Como um Profissional"
         subtitulo="Alto rendimento e performance garantida."
@@ -89,6 +91,14 @@ export default function PaginaPkz() {
           para que cada atleta evolua com máxima segurança.
         </p>
       </Sobre>
+
+      <FaixaNumeros
+        itens={[
+          { valor: marca.modalidades.filter((m) => m !== "Outro esporte").length, rotulo: "modalidades esportivas" },
+          { valor: marca.horarios.dias.length, rotulo: "dias de aula por semana" },
+          { valor: marca.horarios.horas.length, rotulo: "horários por dia" },
+        ]}
+      />
 
       <SecaoFamilia />
       <SecaoEsportes />

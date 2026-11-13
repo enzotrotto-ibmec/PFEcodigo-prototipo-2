@@ -5,9 +5,10 @@ export function asset(caminho) {
   return `${import.meta.env.BASE_URL}assets/${caminho}`;
 }
 
-// As fotos existem em três larguras (-480, -800 e -1280). Esta função monta o srcset
-// a partir do nome base. Ex.: srcsetDe("img/pkz/karate") →
-// ".../karate-480.webp 480w, .../karate-800.webp 800w, .../karate-1280.webp 1280w"
+// As fotos existem em quatro larguras (-480, -800, -1280 e -1920).
+// Esta função monta o srcset a partir do nome base.
+// Ex.: srcsetDe("img/pkz/karate") → ".../karate-480.webp 480w, ... , .../karate-1920.webp 1920w"
+// Não use com img/portal/*: essas só existem até 1280 (servem de imagem de compartilhamento).
 export function srcsetDe(base) {
-  return [480, 800, 1280].map((largura) => `${asset(`${base}-${largura}.webp`)} ${largura}w`).join(", ");
+  return [480, 800, 1280, 1920].map((largura) => `${asset(`${base}-${largura}.webp`)} ${largura}w`).join(", ");
 }

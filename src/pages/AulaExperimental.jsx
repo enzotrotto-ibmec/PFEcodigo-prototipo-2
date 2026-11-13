@@ -4,6 +4,7 @@ import Hero from "../components/marca/Hero.jsx";
 import Agenda from "../components/agendamento/Agenda.jsx";
 import AgendamentoModal from "../components/agendamento/AgendamentoModal.jsx";
 import { MARCAS } from "../data/marcas.js";
+import { ROTAS } from "../data/seo.js";
 
 // Página de agendamento da aula experimental. Um só componente serve às duas marcas:
 // a rota passa a marca por props (<AulaExperimental marca="pkz" /> em App.jsx).
@@ -24,7 +25,7 @@ export default function AulaExperimental({ marca: marcaId }) {
   const [horario, setHorario] = useState(null);
 
   return (
-    <LayoutMarca marcaId={marcaId} titulo={`Aula Experimental | ${marca.nome}`}>
+    <LayoutMarca marcaId={marcaId} titulo={ROTAS[`${marca.rota}/aula-experimental`].titulo}>
       <Hero
         id="aula-hero"
         titulo="Aula Experimental"

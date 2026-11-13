@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useAnimacoesScroll } from "../../utils/animacoes.js";
 import EstilosDaPagina from "../EstilosDaPagina.jsx";
 import { SimboloWhatsapp } from "../Icones.jsx";
 import Cabecalho from "./Cabecalho.jsx";
@@ -11,6 +12,7 @@ import { MARCAS } from "../../data/marcas.js";
 import baseCss from "../../styles/base.css?inline";
 import pkzCss from "../../styles/pkz.css?inline";
 import otoCss from "../../styles/one-to-one.css?inline";
+import fisioCss from "../../styles/fisio.css?inline";
 import ctaCss from "../../styles/cta.css?inline";
 import extrasCss from "../../styles/extras.css?inline";
 
@@ -28,15 +30,16 @@ import extrasCss from "../../styles/extras.css?inline";
 export default function LayoutMarca({ marcaId, titulo, paginaInicial = false, children }) {
   const [contatoAberto, setContatoAberto] = useState(false);
   const marca = MARCAS[marcaId];
+  const raizRef = useRef(null);
+  useAnimacoesScroll(raizRef);
 
   // mesma ordem de CSS do vanilla; a aula experimental não carregava o cta.css
-  const folhas = paginaInicial
-    ? [baseCss, marcaId === "pkz" ? pkzCss : otoCss, ctaCss, extrasCss]
-    : [baseCss, marcaId === "pkz" ? pkzCss : otoCss, extrasCss];
+  const temaCss = { pkz: pkzCss, oto: otoCss, fisio: fisioCss }[marcaId];
+  const folhas = paginaInicial ? [baseCss, temaCss, ctaCss, extrasCss] : [baseCss, temaCss, extrasCss];
 
   return (
     // data-brand: o cta.css e o extras.css usam [data-brand="pkz"] / [data-brand="oto"]
-    <div className="pagina" data-brand={marcaId}>
+    <div className="pagina" data-brand={marcaId} ref={raizRef}>
       {/* No React 19, <title> e <meta> vão sozinhos para o <head> */}
       <title>{titulo}</title>
       <meta name="theme-color" content={marca.corTema} />
@@ -46,6 +49,7 @@ export default function LayoutMarca({ marcaId, titulo, paginaInicial = false, ch
       <a className="skip-link" href="#main">
         Pular para o conteúdo
       </a>
+      <div className="scroll-progress" aria-hidden="true"></div>
       <SimboloWhatsapp />
 
       <Cabecalho
